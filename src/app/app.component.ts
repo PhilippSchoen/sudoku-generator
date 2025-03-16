@@ -1,21 +1,36 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {NgFor} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
 
 @Component({
   selector: 'app-root',
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'sudoku-generator';
-
   sudoku: (SudokuValue | undefined)[][] = [];
   type = ValueType;
 
+  markedCell: {x: number, y: number} | undefined;
+
   constructor() {
+    this.generateSudoku();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if(event.key >= '1' && event.key <= '9') {
+      if(this.markedCell) {
+        this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+      }
+    }
+  }
+
+  generateSudoku() {
+    this.sudoku = [];
+    this.markedCell = undefined;
     for(let i = 0; i < 9; i++) {
       let row = [];
       for(let j = 0; j < 9; j++) {
@@ -32,5 +47,9 @@ export class AppComponent {
         }
       }
     }
+  }
+
+  markCell(x: number, y: number) {
+    this.markedCell = {x, y};
   }
 }

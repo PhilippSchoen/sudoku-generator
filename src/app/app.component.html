@@ -1,6 +1,6 @@
 <div #sudokuContainer>
   <h1 class="heading">Sudoku</h1>
-  <svg viewBox="0 0 90 90" class="sudoku-svg">
+  <svg viewBox="-1 -1 92 92" class="sudoku-svg">
     <!--  Sub Grid-->
     <ng-container *ngFor="let position of [10, 20, 30, 40, 50, 60, 70, 80]">
       <line x1="0" x2="90 " [attr.y1]="position" [attr.y2]="position" stroke="gray" stroke-width="0.25"></line>
@@ -14,17 +14,21 @@
     <line x1="60 " x2="60 " y1="0" y2="90 " stroke="black" stroke-width="0.5"></line>
 
     <!--  Numbers-->
-    <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-      <ng-container *ngFor="let j of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-        <text [attr.x]="j * 10 + 3" [attr.y]="i * 10 + 8" font-size="8" font-family="Arial"
-              [attr.fill]="sudoku[i][j]?.type === type.User ? 'black' : 'darkblue'"
+    <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
+      <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
+        <text *ngIf="sudoku[y][x]" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
+              [attr.fill]="sudoku[y][x]?.type === type.User ? 'black' : 'darkblue'"
         >
-          {{sudoku[i][j]?.value}}
+          {{sudoku[y][x]?.value}}
         </text>
+        <rect *ngIf="sudoku[y][x]?.type !== type.Predefined" [attr.x]="10 * x" [attr.y]="10 * y" width="10" height="10" fill="rgba(0, 0, 0, 0)" style="cursor: pointer" (click)="markCell(x, y)"></rect>
       </ng-container>
     </ng-container>
+
+    <!--  Highlighted Cell-->
+    <rect *ngIf="markedCell" [attr.x]="markedCell.x * 10" [attr.y]="markedCell.y * 10" width="10" height="10" fill="rgba(0, 0, 0, 0)" stroke="turquoise" stroke-width="0.5" style="cursor: pointer" (click)="markedCell = undefined"></rect>
   </svg>
   <div class="content">
-    <button class="modern-button">Generate Sudoku</button>
+    <button class="modern-button" (click)="generateSudoku()">Generate Sudoku</button>
   </div>
 </div>
