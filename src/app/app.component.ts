@@ -49,6 +49,10 @@ export class AppComponent {
     }
   }
 
+  verifySolution() {
+    return true;
+  }
+
   markCell(x: number, y: number) {
     this.markedCell = {x, y};
   }

@@ -28,7 +28,12 @@
     <!--  Highlighted Cell-->
     <rect *ngIf="markedCell" [attr.x]="markedCell.x * 10" [attr.y]="markedCell.y * 10" width="10" height="10" fill="rgba(0, 0, 0, 0)" stroke="turquoise" stroke-width="0.5" style="cursor: pointer" (click)="markedCell = undefined"></rect>
   </svg>
-  <div class="content">
-    <button class="modern-button" (click)="generateSudoku()">Generate Sudoku</button>
+  <div class="button-section">
+    <div >
+      <button class="modern-button" (click)="generateSudoku()">Generate Sudoku</button>
+    </div>
+    <div >
+      <button class="modern-button" (click)="verifySolution()">Verify Solution</button>
+    </div>
   </div>
 </div>
