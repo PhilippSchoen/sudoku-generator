@@ -45,3 +45,12 @@
 .modern-button:active {
   box-shadow: inset 2px 2px 5px #aaaaaa, inset -2px -2px 5px #ffffff;
 }
+
+@keyframes blink-red {
+  0%, 100% { fill: black; }
+  50% { fill: red; }
+}
+
+.blink-animation {
+  animation: blink-red 0.5s;
+}

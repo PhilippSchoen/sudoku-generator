@@ -16,8 +16,9 @@
     <!--  Numbers-->
     <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
       <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-        <text *ngIf="sudoku[y][x]" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
+        <text [ngClass]="{'blink-animation': incorrectSolution}" *ngIf="sudoku[y][x]" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
               [attr.fill]="sudoku[y][x]?.type === type.User ? 'black' : 'darkblue'"
+              [attr.transform]="'rotate(' + currentRotation + ', ' + x * 10  + ', ' + y * 10 + ')'"
         >
           {{sudoku[y][x]?.value}}
         </text>
