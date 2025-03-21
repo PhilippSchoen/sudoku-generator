@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter/Inter-VariableFont.ttf') format('ttf'),
+  url('/assets/fonts/Inter/Inter-Italic-VariableFont.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}

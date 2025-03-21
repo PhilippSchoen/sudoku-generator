@@ -5,11 +5,23 @@
   height: 70vmin;
 }
 
-.heading {
-  font-size: 2rem;
+.heading-container {
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 40px;
+}
+
+.heading {
+  font-size: 3.5rem;
+  color: #333333;
+  font-weight: 700;
+  margin: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.heading:hover {
+  background: linear-gradient(to left, darkblue, black);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .button-section {
