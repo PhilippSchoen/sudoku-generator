@@ -11,7 +11,7 @@
 
 .heading {
   font-size: 3.5rem;
-  color: #333333;
+  color: var(--color-gray);
   font-weight: 700;
   margin: 30px;
   text-transform: uppercase;
@@ -19,7 +19,7 @@
 }
 
 .heading:hover {
-  background: linear-gradient(to left, darkblue, black);
+  background: linear-gradient(to left, var(--color-secondary), var(--color-black));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -59,8 +59,8 @@
 }
 
 @keyframes blink-red {
-  0%, 100% { fill: black; }
-  50% { fill: red; }
+  0%, 100% { fill: var(--color-black); }
+  50% { fill: var(--color-error); }
 }
 
 .blink-animation {

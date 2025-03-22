@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {NgClass, NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
 import {concat, concatMap, delay, interval, map, of, Subject, take} from 'rxjs';
+import {Color} from '../colors';
 
 @Component({
   selector: 'app-root',
@@ -91,4 +92,6 @@ animateIncorrectSolution() {
   markCell(x: number, y: number) {
     this.markedCell = {x, y};
   }
+
+  protected readonly Color = Color;
 }
