@@ -66,3 +66,18 @@
 .blink-animation {
   animation: blink-red 0.5s;
 }
+
+@keyframes scale-up {
+  0%, 100% {fill: var(--color-secondary)}
+  0% {font-size: 8px}
+  50% {font-size: 10px}
+  100% {font-size: 8px}
+}
+
+.success-animation {
+  animation: scale-up 0.2s;
+}
+
+.success {
+  fill: var(--color-secondary);
+}

@@ -2,7 +2,7 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NgClass, NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
-import {concat, concatMap, delay, interval, map, of, Subject, take} from 'rxjs';
+import {concat, concatMap, delay, from, interval, map, of, Subject, take} from 'rxjs';
 import {Color} from '../colors';
 
 @Component({
@@ -20,6 +20,8 @@ export class AppComponent {
   incorrectSolution = false;
 
   currentRotation = 0;
+
+  animatedTileIndex = [-1, -1];
 
   constructor() {
     this.generateSudoku();
@@ -60,37 +62,68 @@ export class AppComponent {
       this.animateIncorrectSolution();
       return false;
     }
+    this.animateCorrectSolution();
     return true;
   }
 
-animateIncorrectSolution() {
-  this.incorrectSolution = true;
-  const animationSteps = concat(
-    of(0),
-    of(5),
-    of(10),
-    of(5),
-    of(0),
-    of(-5),
-    of(-10),
-    of(-5),
-    of(0)
-  );
+  animateIncorrectSolution() {
+    this.incorrectSolution = true;
+    const animationSteps = concat(
+      of(0),
+      of(5),
+      of(10),
+      of(5),
+      of(0),
+      of(-5),
+      of(-10),
+      of(-5),
+      of(0)
+    );
 
-  animationSteps.pipe(
-    concatMap(rotation => of(rotation).pipe(delay(35))),
-    map(rotation => {
-      this.currentRotation = rotation;
-      return rotation;
-    }),
-    take(9)
-  ).subscribe({
-    complete: () => this.incorrectSolution = false
-  });
-}
+    animationSteps.pipe(
+      concatMap(rotation => of(rotation).pipe(delay(35))),
+      map(rotation => {
+        this.currentRotation = rotation;
+        return rotation;
+      }),
+      take(9)
+    ).subscribe({
+      complete: () => this.incorrectSolution = false
+    });
+  }
+
+  animateCorrectSolution() {
+    const animationSteps = from(Array.from({ length: 81 }, (_, i) => i + 1));
+
+    animationSteps.pipe(
+      concatMap(step => of(step).pipe(delay(100))),
+      map(step => {
+        const rowIndex = Math.floor((step - 1) / 9);
+        const colIndex = (step - 1) % 9;
+        this.animatedTileIndex = [rowIndex, colIndex];
+        return [rowIndex, colIndex];
+      }),
+      take(81)
+    ).subscribe({
+      complete: () => this.animatedTileIndex = [-1, -1]
+    });
+  }
 
   markCell(x: number, y: number) {
     this.markedCell = {x, y};
+  }
+
+  areCoordinatesEqual(reference: number[], compare: number[]): boolean {
+    return reference[0] === compare[0] && reference[1] === compare[1];
+  }
+
+  isCoordinateAtOrBefore(reference: number[], compare: number[]): boolean {
+    const [targetX, targetY] = compare;
+    const [currentX, currentY] = reference;
+
+    return !(
+      currentX < targetX || (currentX === targetX && currentY <= targetY)
+    );
   }
 
   protected readonly Color = Color;
