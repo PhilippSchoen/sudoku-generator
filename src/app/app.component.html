@@ -1,3 +1,8 @@
+<div *ngIf="isSudokuSolved" class="sudoku-solved-text">
+  <h2>Congratulations! <br> You solved it! </h2>
+  <button class="modern-button" (click)="generateSudoku()">Challenge Another Sudoku</button>
+</div>
+
 <div #sudokuContainer>
   <div class="heading-container">
     <h1 class="heading">Sudoku</h1>

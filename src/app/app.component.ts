@@ -2,7 +2,7 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NgClass, NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
-import {concat, concatMap, delay, from, interval, map, of, Subject, take} from 'rxjs';
+import {concat, concatMap, delay, from, interval, map, of, Subject, Subscription, take} from 'rxjs';
 import {Color} from '../colors';
 
 @Component({
@@ -22,6 +22,10 @@ export class AppComponent {
   currentRotation = 0;
 
   animatedTileIndex = [-1, -1];
+
+  isSudokuSolved = false;
+
+  animationSubscription?: Subscription;
 
   constructor() {
     this.generateSudoku();
@@ -55,15 +59,18 @@ export class AppComponent {
         }
       }
     }
+
+    this.isSudokuSolved = false;
+    this.animationSubscription?.unsubscribe();
+    this.animatedTileIndex = [-1, -1];
   }
 
   verifySolution() {
-    if(true) {
-      this.animateIncorrectSolution();
-      return false;
-    }
+    // if(true) {
+    //   this.animateIncorrectSolution();
+    // }
     this.animateCorrectSolution();
-    return true;
+    this.isSudokuSolved = true;
   }
 
   animateIncorrectSolution() {
@@ -95,7 +102,7 @@ export class AppComponent {
   animateCorrectSolution() {
     const animationSteps = from(Array.from({ length: 81 }, (_, i) => i + 1));
 
-    animationSteps.pipe(
+    this.animationSubscription = animationSteps.pipe(
       concatMap(step => of(step).pipe(delay(100))),
       map(step => {
         const rowIndex = Math.floor((step - 1) / 9);
