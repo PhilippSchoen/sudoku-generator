@@ -66,11 +66,12 @@ export class AppComponent {
   }
 
   verifySolution() {
-    // if(true) {
-    //   this.animateIncorrectSolution();
-    // }
-    this.animateCorrectSolution();
-    this.isSudokuSolved = true;
+    if(true) {
+      this.animateIncorrectSolution();
+    } else {
+      this.animateCorrectSolution();
+      this.isSudokuSolved = true;
+    }
   }
 
   animateIncorrectSolution() {
