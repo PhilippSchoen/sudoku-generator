@@ -10,6 +10,7 @@
   <div class="sudoku-container" #sudokuContainer>
     <!--    Sudoku-->
     <svg viewBox="-1 -1 92 92" class="sudoku-svg">
+
       <!--  Sub Grid-->
       <ng-container *ngFor="let position of [10, 20, 30, 40, 50, 60, 70, 80]">
         <line x1="0" x2="90 " [attr.y1]="position" [attr.y2]="position" [attr.stroke]="Color.Gray" stroke-width="0.25"></line>
@@ -25,6 +26,12 @@
       <!--  Numbers-->
       <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
         <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
+          <defs>
+            <clipPath [attr.id]="'clip-path-' + x + '-' + y">
+              <rect [attr.x]="x" [attr.y]="y" width="0.5" height="0.5" />
+            </clipPath>
+          </defs>
+
           <text [ngClass]="{'blink-animation': incorrectSolution, 'success-animation': areCoordinatesEqual(animatedTileIndex, [y, x]), 'success': isCoordinateAtOrBefore(animatedTileIndex, [y, x])}"
                 *ngIf="sudoku[y][x]" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
                 [attr.fill]="sudoku[y][x]?.type === type.User ? Color.Black : Color.Primary"
@@ -32,6 +39,7 @@
           >
             {{sudoku[y][x]?.value}}
           </text>
+          <text [attr.x]="x * 10" [attr.y]="y * 10 + 2.5" font-size="3" fill="#777" clip-path="url(#clip-path)">{{notes[y][x]}}</text>
           <rect *ngIf="sudoku[y][x]?.type !== type.Predefined" [attr.x]="10 * x" [attr.y]="10 * y" width="10" height="10" fill="rgba(0, 0, 0, 0)" style="cursor: pointer" (click)="markCell(x, y)"></rect>
         </ng-container>
       </ng-container>
@@ -46,7 +54,7 @@
           <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
         </svg>
       </button>
-      <button class="tool-button">
+      <button class="tool-button selected">
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pencil-square" viewBox="0 0 16 16">
           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -72,20 +80,20 @@
 
       <div class="social-distancing"></div>
 
-        <button class="tool-button">
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.User}" (click)="selectTool(type.User)">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-pen" viewBox="0 0 16 16">
           <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
         </svg>
           Write
         </button>
-        <button class="tool-button">
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.Note}" (click)="selectTool(type.Note)">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-pencil-square" viewBox="0 0 16 16">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
           </svg>
           Note
         </button>
-        <button class="tool-button">
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.Empty}" (click)="selectTool(type.Empty)">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-eraser" viewBox="0 0 16 16">
             <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
           </svg>

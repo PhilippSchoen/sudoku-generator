@@ -44,6 +44,12 @@
   justify-content: space-between;
 }
 
+.tool-button.selected {
+  background: conic-gradient(from 145deg, var(--color-gray) ,var(--color-primary));
+  color: #FFF;
+  box-shadow: 5px 5px 15px var(--color-primary), -5px -5px 15px rgba(0, 0, 0, 0.5);
+}
+
 .flex-row {
   flex-direction: row;
   gap: 30px;

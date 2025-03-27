@@ -6,5 +6,6 @@ export interface SudokuValue {
 export enum ValueType {
   Predefined,
   User,
-  Note
+  Note,
+  Empty
 }

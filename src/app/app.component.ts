@@ -13,19 +13,17 @@ import {Color} from '../colors';
 })
 export class AppComponent {
   sudoku: (SudokuValue | undefined)[][] = [];
+  notes: string[][] = [];
   type = ValueType;
 
   markedCell: {x: number, y: number} | undefined;
-
   incorrectSolution = false;
-
   currentRotation = 0;
-
   animatedTileIndex = [-1, -1];
-
   isSudokuSolved = false;
-
   animationSubscription?: Subscription;
+
+  activeTool: ValueType = ValueType.User;
 
   constructor() {
     this.generateSudoku();
@@ -33,23 +31,44 @@ export class AppComponent {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if(event.key >= '1' && event.key <= '9') {
+    if(this.activeTool === ValueType.User) {
+      if(event.key >= '1' && event.key <= '9') {
+        if(this.markedCell) {
+          this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+        }
+      }
+    }
+    else if(this.activeTool === ValueType.Note) {
       if(this.markedCell) {
-        this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+        const { x, y } = this.markedCell;
+
+        switch (event.key) {
+          case 'Backspace':
+            this.notes[y][x] = this.notes[y][x].slice(0, -1);
+            event.preventDefault();
+            break;
+          default:
+            if (event.key.length === 1) {
+              this.notes[y][x] += event.key;
+            }
+        }
       }
     }
   }
 
   generateSudoku() {
     this.sudoku = [];
+    this.notes = [];
     this.markedCell = undefined;
     for(let i = 0; i < 9; i++) {
       let row = [];
+      let noteRow = [];
       for(let j = 0; j < 9; j++) {
-        const value = Math.ceil(Math.random() * 9);
         row.push({type: ValueType.Predefined, value: Math.ceil(Math.random() * 9)});
+        noteRow.push('');
       }
       this.sudoku.push(row);
+      this.notes.push(noteRow);
     }
 
     for(let i = 0; i < 9; i++) {
@@ -72,6 +91,10 @@ export class AppComponent {
       this.animateCorrectSolution();
       this.isSudokuSolved = true;
     }
+  }
+
+  selectTool(tool: ValueType) {
+    this.activeTool = tool;
   }
 
   animateIncorrectSolution() {
@@ -118,6 +141,10 @@ export class AppComponent {
   }
 
   markCell(x: number, y: number) {
+    if(this.activeTool === ValueType.Empty) {
+      this.sudoku[y][x] = undefined;
+      this.notes[y][x] = '';
+    }
     this.markedCell = {x, y};
   }
 
