@@ -26,12 +26,6 @@
       <!--  Numbers-->
       <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
         <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-          <defs>
-            <clipPath [attr.id]="'clip-path-' + x + '-' + y">
-              <rect [attr.x]="x" [attr.y]="y" width="0.5" height="0.5" />
-            </clipPath>
-          </defs>
-
           <text [ngClass]="{'blink-animation': incorrectSolution, 'success-animation': areCoordinatesEqual(animatedTileIndex, [y, x]), 'success': isCoordinateAtOrBefore(animatedTileIndex, [y, x])}"
                 *ngIf="sudoku[y][x]" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
                 [attr.fill]="sudoku[y][x]?.type === type.User ? Color.Black : Color.Primary"
@@ -39,7 +33,7 @@
           >
             {{sudoku[y][x]?.value}}
           </text>
-          <text [attr.x]="x * 10" [attr.y]="y * 10 + 2.5" font-size="3" fill="#777" clip-path="url(#clip-path)">{{notes[y][x]}}</text>
+          <text [attr.x]="x * 10" [attr.y]="y * 10 + 2.5" font-size="2.2" fill="#777">{{notes[y][x]}}</text>
           <rect *ngIf="sudoku[y][x]?.type !== type.Predefined" [attr.x]="10 * x" [attr.y]="10 * y" width="10" height="10" fill="rgba(0, 0, 0, 0)" style="cursor: pointer" (click)="markCell(x, y)"></rect>
         </ng-container>
       </ng-container>

@@ -48,7 +48,7 @@ export class AppComponent {
             event.preventDefault();
             break;
           default:
-            if (event.key.length === 1) {
+            if (event.key >= '1' && event.key <= '9' && this.notes[y][x].length < 8) {
               this.notes[y][x] += event.key;
             }
         }
