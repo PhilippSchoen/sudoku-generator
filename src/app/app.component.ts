@@ -31,6 +31,39 @@ export class AppComponent {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    // Arrow navigation
+    switch(event.key) {
+      case 'ArrowUp':
+        if(this.markedCell) {
+          do {
+            this.markedCell.y = (this.markedCell.y + 8) % 9;
+          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+        }
+        break;
+      case 'ArrowDown':
+        if(this.markedCell) {
+          do {
+            this.markedCell.y = (this.markedCell.y + 1) % 9;
+          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+        }
+        break;
+      case 'ArrowLeft':
+        if(this.markedCell) {
+          do{
+            this.markedCell.x = (this.markedCell.x + 8) % 9;
+          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+        }
+        break;
+      case 'ArrowRight':
+        if(this.markedCell) {
+          do {
+            this.markedCell.x = (this.markedCell.x + 1) % 9;
+          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+        }
+        break;
+    }
+
+    // Writing values
     if(this.activeTool === ValueType.User) {
       if(event.key >= '1' && event.key <= '9') {
         if(this.markedCell) {
@@ -38,6 +71,8 @@ export class AppComponent {
         }
       }
     }
+
+    // Writing notes
     else if(this.activeTool === ValueType.Note) {
       if(this.markedCell) {
         const { x, y } = this.markedCell;
