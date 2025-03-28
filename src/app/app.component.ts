@@ -95,6 +95,13 @@ export class AppComponent {
         }
       }
     }
+    
+    if((event.key === 'Enter' && this.activeTool === ValueType.Empty) || event.key === 'Backspace') {
+      if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
+        this.sudoku[this.markedCell.y][this.markedCell.x] = undefined;
+        this.notes[this.markedCell.y][this.markedCell.x] = '';
+      }
+    }
 
     if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
       // Writing values
