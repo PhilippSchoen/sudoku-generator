@@ -22,5 +22,29 @@
       "error": "#FF5757"
     },
     "pattern": "wave-pattern"
+  },
+  {
+    "id": 3,
+    "name": "Art Deco",
+    "colors": {
+      "primary": "#004F5D",
+      "secondary": "#007C42",
+      "black": "#2B2B2B",
+      "gray": "#B0AFAF",
+      "error": "#FF4C4C"
+    },
+    "pattern": "art-deco-pattern"
+  },
+  {
+    "id": 4,
+    "name": "Cyberpunk",
+    "colors": {
+      "primary": "#6300ff",
+      "secondary": "#00ff9f",
+      "black": "#091833",
+      "gray": "#091833",
+      "error": "#ff2a6d"
+    },
+    "pattern": "hexagon-pattern"
   }
 ]

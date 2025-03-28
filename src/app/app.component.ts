@@ -162,7 +162,12 @@ export class AppComponent {
       this.animateCorrectSolution();
       this.isSudokuSolved = true;
     }
+  }
 
+  switchTheme() {
+    const currentIndex = this.themes.indexOf(this.activeTheme!);
+    const nextIndex = (currentIndex + 1) % this.themes.length;
+    this.selectTheme(this.themes[nextIndex]);
   }
 
   selectTool(tool: ValueType) {
