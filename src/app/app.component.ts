@@ -38,6 +38,8 @@ export class AppComponent {
       this.themes = themes;
       this.selectTheme(themes[1]);
     });
+
+    this.markedCell = {x: 0, y: 0};
   }
 
   selectTheme(theme: Theme) {
@@ -72,27 +74,26 @@ export class AppComponent {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     // Arrow navigation
-    switch(event.key) {
-      case 'ArrowUp':
-        if(this.markedCell) {
-          this.markedCell.y = (this.markedCell.y + 8) % 9;
+
+    if(event.key.startsWith('Arrow')) {
+      if(!this.markedCell) {
+        this.markedCell = {x: 0, y: 0};
+      } else {
+        switch(event.key) {
+          case 'ArrowUp':
+            this.markedCell.y = (this.markedCell.y + 8) % 9;
+            break;
+          case 'ArrowDown':
+            this.markedCell.y = (this.markedCell.y + 1) % 9;
+            break;
+          case 'ArrowLeft':
+            this.markedCell.x = (this.markedCell.x + 8) % 9;
+            break;
+          case 'ArrowRight':
+            this.markedCell.x = (this.markedCell.x + 1) % 9;
+            break;
         }
-        break;
-      case 'ArrowDown':
-        if(this.markedCell) {
-          this.markedCell.y = (this.markedCell.y + 1) % 9;
-        }
-        break;
-      case 'ArrowLeft':
-        if(this.markedCell) {
-          this.markedCell.x = (this.markedCell.x + 8) % 9;
-        }
-        break;
-      case 'ArrowRight':
-        if(this.markedCell) {
-          this.markedCell.x = (this.markedCell.x + 1) % 9;
-        }
-        break;
+      }
     }
 
     if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
