@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Default",
+    "colors": {
+      "primary": "#153779",
+      "secondary": "#0DBF6F",
+      "black": "#0D0C07",
+      "gray": "#282515",
+      "error": "#92140C"
+    },
+    "pattern": null
+  },
+  {
+    "id": 2,
+    "name": "Waves",
+    "colors": {
+      "primary": "#027BCE",
+      "secondary": "#32CD32",
+      "black": "#1B1F23",
+      "gray": "#A9B4B8",
+      "error": "#FF5757"
+    },
+    "pattern": "wave-pattern"
+  }
+]

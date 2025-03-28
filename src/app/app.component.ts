@@ -2,12 +2,14 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NgClass, NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
-import {concat, concatMap, delay, from, interval, map, of, Subject, Subscription, take} from 'rxjs';
+import {concat, concatMap, delay, from, interval, map, Observable, of, Subject, Subscription, take} from 'rxjs';
 import {Color} from '../colors';
+import {Theme} from './entities/theme';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [NgFor, NgIf, NgClass],
+  imports: [NgFor, NgIf, NgClass, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -25,9 +27,46 @@ export class AppComponent {
 
   activeTool: ValueType = ValueType.User;
   areHintsEnabled = true;
+  themes: Theme[] = [];
+  private themesUrl = 'assets/themes.json';
+  activeTheme?: Theme;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.generateSudoku();
+    // Read themes from themes.json and write into themes array using fs
+    this.loadThemes().subscribe(themes => {
+      this.themes = themes;
+      this.selectTheme(themes[1]);
+    });
+  }
+
+  selectTheme(theme: Theme) {
+    this.activeTheme = theme;
+    const root = document.documentElement;
+    root.style.setProperty('--color-primary', theme.colors.primary)
+    root.style.setProperty('--color-secondary', theme.colors.secondary);
+    root.style.setProperty('--color-black', theme.colors.black);
+    root.style.setProperty('--color-gray', theme.colors.gray);
+    root.style.setProperty('--color-error', theme.colors.error);
+  }
+
+  loadThemes(): Observable<Theme[]> {
+    return this.http.get<Theme[]>(this.themesUrl);
+  }
+
+  color(type: Color) {
+    switch(type) {
+      case Color.Black:
+        return this.activeTheme?.colors.black;
+      case Color.Gray:
+        return this.activeTheme?.colors.gray;
+      case Color.Error:
+        return this.activeTheme?.colors.error;
+      case Color.Primary:
+        return this.activeTheme?.colors.primary;
+      case Color.Secondary:
+        return this.activeTheme?.colors.secondary;
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -88,6 +127,7 @@ export class AppComponent {
   }
 
   generateSudoku() {
+
     this.sudoku = [];
     this.notes = [];
     this.markedCell = undefined;
@@ -122,6 +162,7 @@ export class AppComponent {
       this.animateCorrectSolution();
       this.isSudokuSolved = true;
     }
+
   }
 
   selectTool(tool: ValueType) {
