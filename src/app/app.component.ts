@@ -24,6 +24,7 @@ export class AppComponent {
   animationSubscription?: Subscription;
 
   activeTool: ValueType = ValueType.User;
+  areHintsEnabled = true;
 
   constructor() {
     this.generateSudoku();
@@ -35,60 +36,55 @@ export class AppComponent {
     switch(event.key) {
       case 'ArrowUp':
         if(this.markedCell) {
-          do {
-            this.markedCell.y = (this.markedCell.y + 8) % 9;
-          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+          this.markedCell.y = (this.markedCell.y + 8) % 9;
         }
         break;
       case 'ArrowDown':
         if(this.markedCell) {
-          do {
-            this.markedCell.y = (this.markedCell.y + 1) % 9;
-          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+          this.markedCell.y = (this.markedCell.y + 1) % 9;
         }
         break;
       case 'ArrowLeft':
         if(this.markedCell) {
-          do{
-            this.markedCell.x = (this.markedCell.x + 8) % 9;
-          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+          this.markedCell.x = (this.markedCell.x + 8) % 9;
         }
         break;
       case 'ArrowRight':
         if(this.markedCell) {
-          do {
-            this.markedCell.x = (this.markedCell.x + 1) % 9;
-          } while(this.sudoku[this.markedCell.y][this.markedCell.x]?.type === ValueType.Predefined)
+          this.markedCell.x = (this.markedCell.x + 1) % 9;
         }
         break;
     }
 
-    // Writing values
-    if(this.activeTool === ValueType.User) {
-      if(event.key >= '1' && event.key <= '9') {
+    if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
+      // Writing values
+      if(this.activeTool === ValueType.User) {
+        if(event.key >= '1' && event.key <= '9') {
+          if(this.markedCell) {
+            this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+          }
+        }
+      }
+
+      // Writing notes
+      else if(this.activeTool === ValueType.Note) {
         if(this.markedCell) {
-          this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+          const { x, y } = this.markedCell;
+
+          switch (event.key) {
+            case 'Backspace':
+              this.notes[y][x] = this.notes[y][x].slice(0, -1);
+              event.preventDefault();
+              break;
+            default:
+              if (event.key >= '1' && event.key <= '9' && this.notes[y][x].length < 8) {
+                this.notes[y][x] += event.key;
+              }
+          }
         }
       }
     }
 
-    // Writing notes
-    else if(this.activeTool === ValueType.Note) {
-      if(this.markedCell) {
-        const { x, y } = this.markedCell;
-
-        switch (event.key) {
-          case 'Backspace':
-            this.notes[y][x] = this.notes[y][x].slice(0, -1);
-            event.preventDefault();
-            break;
-          default:
-            if (event.key >= '1' && event.key <= '9' && this.notes[y][x].length < 8) {
-              this.notes[y][x] += event.key;
-            }
-        }
-      }
-    }
   }
 
   generateSudoku() {
@@ -176,7 +172,7 @@ export class AppComponent {
   }
 
   markCell(x: number, y: number) {
-    if(this.activeTool === ValueType.Empty) {
+    if(this.activeTool === ValueType.Empty && this.sudoku[y][x]?.type !== ValueType.Predefined) {
       this.sudoku[y][x] = undefined;
       this.notes[y][x] = '';
     }
@@ -194,6 +190,16 @@ export class AppComponent {
     return !(
       currentX < targetX || (currentX === targetX && currentY <= targetY)
     );
+  }
+
+  isHighlighted(x: number, y: number): boolean {
+    if(this.markedCell && this.areHintsEnabled) {
+      const { x: markedX, y: markedY } = this.markedCell;
+      if(this.sudoku[y][x]?.value === this.sudoku[markedY][markedX]?.value && this.sudoku[markedY][markedX] !== undefined) {
+        return true;
+      }
+    }
+    return false;
   }
 
   protected readonly Color = Color;

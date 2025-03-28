@@ -50,6 +50,17 @@
   box-shadow: 5px 5px 15px var(--color-primary), -5px -5px 15px rgba(0, 0, 0, 0.5);
 }
 
+.tool-button.active {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
+  color: #FFF;
+  box-shadow: 5px 5px 15px var(--color-secondary), -5px -5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.tool-button.inactive {
+  background: conic-gradient(from 145deg, var(--color-primary),var(--color-error));
+  color: #FFF;
+}
+
 .flex-row {
   flex-direction: row;
   gap: 30px;
