@@ -56,7 +56,7 @@ export class SudokuService {
           const numbers = this.shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
           for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
-              board[i][j] = {type: ValueType.User, value: num};
+              board[i][j] = {type: ValueType.Predefined, value: num};
               if(this.solveSudoku(board)) {
                 return true;
               }
