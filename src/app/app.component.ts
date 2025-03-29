@@ -1,13 +1,13 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, HostListener} from '@angular/core';
 import {NgClass, NgFor, NgIf} from '@angular/common';
 import {SudokuValue, ValueType} from './sudoku-value';
-import {concat, concatMap, delay, from, interval, map, Observable, of, Subject, Subscription, take} from 'rxjs';
+import {concat, concatMap, delay, from, map, Observable, of, Subscription, take} from 'rxjs';
 import {Color} from '../colors';
 import {Theme} from './entities/theme';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {SudokuService} from '../services/sudoku-service/sudoku.service';
 import {TimerPipe} from '../pipes/timer.pipe';
+import {Difficulty} from '../services/sudoku-service/entities/difficulty';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ import {TimerPipe} from '../pipes/timer.pipe';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  sudoku: (SudokuValue | undefined)[][] = [];
+  sudoku: SudokuValue[][] = [];
   notes: string[][] = [];
   type = ValueType;
 
@@ -123,7 +123,7 @@ export class AppComponent {
 
     if((event.key === 'Enter' && this.activeTool === ValueType.Empty) || event.key === 'Backspace') {
       if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
-        this.sudoku[this.markedCell.y][this.markedCell.x] = undefined;
+        this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.Empty, value: 0};
         this.notes[this.markedCell.y][this.markedCell.x] = '';
       }
     }
@@ -167,23 +167,15 @@ export class AppComponent {
     this.sudoku = [];
     this.notes = [];
     this.markedCell = undefined;
-    for(let i = 0; i < 9; i++) {
-      let row = [];
-      let noteRow = [];
-      for(let j = 0; j < 9; j++) {
-        row.push({type: ValueType.Predefined, value: Math.ceil(Math.random() * 9)});
-        noteRow.push('');
-      }
-      this.sudoku.push(row);
-      this.notes.push(noteRow);
-    }
+
+    this.sudoku = this.sudokuService.generateSudoku(Difficulty.Medium);
 
     for(let i = 0; i < 9; i++) {
+      let noteRow = [];
       for(let j = 0; j < 9; j++) {
-        if(Math.random() < 0.5) {
-          this.sudoku[i][j] = undefined;
-        }
+        noteRow.push('');
       }
+      this.notes.push(noteRow);
     }
 
     this.isSudokuSolved = false;
@@ -195,7 +187,7 @@ export class AppComponent {
   }
 
   verifySolution() {
-    if(!this.sudokuService.validateSudoku(this.sudoku.map(row => row.map(cell => cell?.value ?? 0)))) {
+    if(!this.sudokuService.validateSudoku(this.sudoku)) {
       this.animateIncorrectSolution();
       this.errorCount++;
     } else if(this.sudoku.every(row => row.every(cell => cell?.value !== undefined))) {
@@ -259,7 +251,7 @@ export class AppComponent {
 
   markCell(x: number, y: number) {
     if(this.activeTool === ValueType.Empty && this.sudoku[y][x]?.type !== ValueType.Predefined) {
-      this.sudoku[y][x] = undefined;
+      this.sudoku[y][x] = {type: ValueType.Empty, value: 0};
       this.notes[y][x] = '';
     }
     this.markedCell = {x, y};
@@ -281,7 +273,7 @@ export class AppComponent {
   isHighlighted(x: number, y: number): boolean {
     if(this.markedCell && this.areHintsEnabled) {
       const { x: markedX, y: markedY } = this.markedCell;
-      if(this.sudoku[y][x]?.value === this.sudoku[markedY][markedX]?.value && this.sudoku[markedY][markedX] !== undefined) {
+      if(this.sudoku[y][x]?.value === this.sudoku[markedY][markedX]?.value && this.sudoku[markedY][markedX].type !== ValueType.Empty) {
         return true;
       }
     }
