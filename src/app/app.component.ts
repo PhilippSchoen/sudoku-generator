@@ -129,37 +129,39 @@ export class AppComponent {
     }
 
     if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
-      // Writing values
-      if(this.activeTool === ValueType.User) {
-        if(event.key >= '1' && event.key <= '9') {
-          if(this.markedCell) {
-            this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
-            if(!this.isZenMode) {
-              this.verifySolution();
-            }
-          }
-        }
+      if(event.key >= '1' && event.key <= '9') {
+        this.insertValue(event.key);
       }
+    }
 
-      // Writing notes
-      else if(this.activeTool === ValueType.Note) {
-        if(this.markedCell) {
-          const { x, y } = this.markedCell;
+  }
 
-          switch (event.key) {
-            case 'Backspace':
-              this.notes[y][x] = this.notes[y][x].slice(0, -1);
-              event.preventDefault();
-              break;
-            default:
-              if (event.key >= '1' && event.key <= '9' && this.notes[y][x].length < 8) {
-                this.notes[y][x] += event.key;
-              }
-          }
+  insertValue(input: string) {
+    if(this.activeTool === ValueType.User) {
+      if(this.markedCell) {
+        this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +input};
+        if(!this.isZenMode) {
+          this.verifySolution();
         }
       }
     }
 
+    // Writing notes
+    else if(this.activeTool === ValueType.Note) {
+      if(this.markedCell) {
+        const { x, y } = this.markedCell;
+
+        switch (input) {
+          case 'Backspace':
+            this.notes[y][x] = this.notes[y][x].slice(0, -1);
+            break;
+          default:
+            if (this.notes[y][x].length < 8) {
+              this.notes[y][x] += input;
+            }
+        }
+      }
+    }
   }
 
   generateSudoku() {
