@@ -17,6 +17,7 @@ export class SudokuService {
         sudoku[i].push({type: ValueType.Empty, value: 0});
       }
     }
+    this.solveSudoku(sudoku);
 
     return sudoku;
   }
@@ -31,6 +32,26 @@ export class SudokuService {
             return false;
           }
           board[i][j] = column;
+        }
+      }
+    }
+    return true;
+  }
+
+  private solveSudoku(board: SudokuValue[][]): boolean {
+    for(let i = 0; i < 9; i++) {
+      for(let j = 0; j < 9; j++) {
+        if(board[i][j].type === ValueType.Empty) {
+          for(let num = 1; num < 10; num++) {
+            if(this.isVariableValid(board, i, j, num)) {
+              board[i][j] = {type: ValueType.User, value: num};
+              if(this.solveSudoku(board)) {
+                return true;
+              }
+              board[i][j] = {type: ValueType.Empty, value: 0};
+            }
+          }
+          return false;
         }
       }
     }
