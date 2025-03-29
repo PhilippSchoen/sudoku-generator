@@ -163,7 +163,6 @@ export class AppComponent {
   }
 
   generateSudoku() {
-
     this.sudoku = [];
     this.notes = [];
     this.markedCell = undefined;
@@ -190,7 +189,7 @@ export class AppComponent {
     if(!this.sudokuService.validateSudoku(this.sudoku)) {
       this.animateIncorrectSolution();
       this.errorCount++;
-    } else if(this.sudoku.every(row => row.every(cell => cell?.value !== undefined))) {
+    } else if(this.sudoku.every(row => row.every(cell => cell?.type !== ValueType.Empty))) {
       this.animateCorrectSolution();
       this.isSudokuSolved = true;
     }

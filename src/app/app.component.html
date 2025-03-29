@@ -47,7 +47,7 @@
                 [attr.fill]="sudoku[y][x]?.type === type.User ? color(Color.Black) : color(Color.Primary)"
                 [attr.transform]="'rotate(' + currentRotation + ', ' + x * 10  + ', ' + y * 10 + ')'"
           >
-            {{sudoku[y][x]?.value}}
+            {{sudoku[y][x].value}}
           </text>
           <text [attr.x]="x * 10" [attr.y]="y * 10 + 2.5" font-size="2.2" fill="#777">{{notes[y][x]}}</text>
           <rect [attr.x]="10 * x" [attr.y]="10 * y" width="10" height="10" fill-opacity="0.25" [attr.fill]="isHighlighted(x, y) ? color(Color.Primary) : 'rgba(0, 0, 0, 0)'" style="cursor: pointer" (click)="markCell(x, y)"></rect>

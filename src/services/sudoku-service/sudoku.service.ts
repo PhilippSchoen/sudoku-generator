@@ -7,6 +7,8 @@ import {Difficulty} from './entities/difficulty';
 })
 export class SudokuService {
 
+  cachedSolution?: SudokuValue[][];
+
   constructor() { }
 
   generateSudoku(difficulty: Difficulty): SudokuValue[][] {
@@ -18,31 +20,41 @@ export class SudokuService {
       }
     }
     this.solveSudoku(sudoku);
+    this.cachedSolution = JSON.parse(JSON.stringify(sudoku));
+
+    this.removeNumbers(sudoku, difficulty);
 
     return sudoku;
   }
 
   validateSudoku(board: SudokuValue[][]): boolean {
+    if(!this.cachedSolution) {
+      return false;
+    }
     for(let i = 0; i < 9; i++) {
       for(let j = 0; j < 9; j++) {
-        if(board[i][j].type !== ValueType.Empty) {
-          const column = board[i][j];
-          board[i][j] = {type: ValueType.Empty, value: 0};
-          if(!this.isVariableValid(board, i, j, column.value)) {
-            return false;
-          }
-          board[i][j] = column;
+        if(board[i][j].type === ValueType.User && board[i][j].value !== this.cachedSolution[i][j].value) {
+          return false;
         }
       }
     }
     return true;
   }
 
+  private shuffleArray(array: number[]): number[] {
+    for(let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   private solveSudoku(board: SudokuValue[][]): boolean {
     for(let i = 0; i < 9; i++) {
       for(let j = 0; j < 9; j++) {
         if(board[i][j].type === ValueType.Empty) {
-          for(let num = 1; num < 10; num++) {
+          const numbers = this.shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
               board[i][j] = {type: ValueType.User, value: num};
               if(this.solveSudoku(board)) {
@@ -56,6 +68,56 @@ export class SudokuService {
       }
     }
     return true;
+  }
+
+  private countSolutions(board: SudokuValue[][]): number {
+    let count = 0;
+    for(let i = 0; i < 9; i++) {
+      for(let j = 0; j < 9; j++) {
+        if(board[i][j].type === ValueType.Empty) {
+          const numbers = this.shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          for(let num of numbers) {
+            if(this.isVariableValid(board, i, j, num)) {
+              board[i][j] = {type: ValueType.User, value: num};
+              count += this.countSolutions(board);
+              board[i][j] = {type: ValueType.Empty, value: 0};
+            }
+          }
+          return count;
+        }
+      }
+    }
+    return 1;
+  }
+
+  private removeNumbers(board: SudokuValue[][], difficulty: Difficulty) {
+    let attemptCount = 10;
+    switch(difficulty) {
+      case Difficulty.Easy:
+        attemptCount = 30;
+        break;
+      case Difficulty.Medium:
+        attemptCount = 40;
+        break;
+      case Difficulty.Hard:
+        attemptCount = 50;
+        break;
+    }
+    let attempts = 0;
+    while(attempts < attemptCount) {
+      const row = Math.floor(Math.random() * 9);
+      const col = Math.floor(Math.random() * 9);
+      if(board[row][col].type !== ValueType.Empty) {
+        const value = board[row][col].value;
+        board[row][col] = {type: ValueType.Empty, value: 0};
+        const boardCopy = JSON.parse(JSON.stringify(board));
+        if(this.countSolutions(boardCopy) !== 1) {
+          board[row][col] = {type: ValueType.User, value};
+        } else {
+          attempts++;
+        }
+      }
+    }
   }
 
   private isVariableValid(board: SudokuValue[][], row: number, col: number, num: number): boolean {
