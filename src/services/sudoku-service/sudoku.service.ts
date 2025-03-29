@@ -15,6 +15,22 @@ export class SudokuService {
     return sudoku;
   }
 
+  validateSudoku(board: number[][]): boolean {
+    for(let i = 0; i < 9; i++) {
+      for(let j = 0; j < 9; j++) {
+        if(board[i][j] !== 0) {
+          const num = board[i][j];
+          board[i][j] = 0;
+          if(!this.isVariableValid(board, i, j, num)) {
+            return false;
+          }
+          board[i][j] = num;
+        }
+      }
+    }
+    return true;
+  }
+
   private isVariableValid(board: number[][], row: number, col: number, num: number): boolean {
     for (let x = 0; x < 9; x++) {
       if (

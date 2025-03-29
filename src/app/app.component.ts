@@ -6,10 +6,12 @@ import {concat, concatMap, delay, from, interval, map, Observable, of, Subject, 
 import {Color} from '../colors';
 import {Theme} from './entities/theme';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {SudokuService} from '../services/sudoku-service/sudoku.service';
+import {TimerPipe} from '../pipes/timer.pipe';
 
 @Component({
   selector: 'app-root',
-  imports: [NgFor, NgIf, NgClass, HttpClientModule],
+  imports: [NgFor, NgIf, NgClass, HttpClientModule, TimerPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -30,13 +32,18 @@ export class AppComponent {
   themes: Theme[] = [];
   private themesUrl = 'assets/themes.json';
   activeTheme?: Theme;
+  isZenMode = true;
 
-  constructor(private http: HttpClient) {
+  timeUsed = 0;
+  errorCount = 0;
+  intervalId: any;
+
+  constructor(private http: HttpClient, private sudokuService: SudokuService) {
     this.generateSudoku();
     // Read themes from themes.json and write into themes array using fs
     this.loadThemes().subscribe(themes => {
       this.themes = themes;
-      this.selectTheme(themes[1]);
+      this.selectTheme(themes[0]);
     });
 
     this.markedCell = {x: 0, y: 0};
@@ -71,6 +78,24 @@ export class AppComponent {
     }
   }
 
+  startTimer() {
+    this.intervalId = setInterval(() => {
+      this.timeUsed++;
+    }, 1000);
+  }
+
+  clearTimer() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  resetTimer() {
+    this.clearTimer();
+    this.timeUsed = 0;
+    this.startTimer();
+  }
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     // Arrow navigation
@@ -95,7 +120,7 @@ export class AppComponent {
         }
       }
     }
-    
+
     if((event.key === 'Enter' && this.activeTool === ValueType.Empty) || event.key === 'Backspace') {
       if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
         this.sudoku[this.markedCell.y][this.markedCell.x] = undefined;
@@ -109,6 +134,9 @@ export class AppComponent {
         if(event.key >= '1' && event.key <= '9') {
           if(this.markedCell) {
             this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +event.key};
+            if(!this.isZenMode) {
+              this.verifySolution();
+            }
           }
         }
       }
@@ -161,12 +189,16 @@ export class AppComponent {
     this.isSudokuSolved = false;
     this.animationSubscription?.unsubscribe();
     this.animatedTileIndex = [-1, -1];
+
+    this.resetTimer();
+    this.errorCount = 0;
   }
 
   verifySolution() {
-    if(true) {
+    if(!this.sudokuService.validateSudoku(this.sudoku.map(row => row.map(cell => cell?.value ?? 0)))) {
       this.animateIncorrectSolution();
-    } else {
+      this.errorCount++;
+    } else if(this.sudoku.every(row => row.every(cell => cell?.value !== undefined))) {
       this.animateCorrectSolution();
       this.isSudokuSolved = true;
     }
