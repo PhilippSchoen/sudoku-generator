@@ -1,6 +1,6 @@
 <div *ngIf="isSudokuSolved" class="sudoku-solved-text">
   <h2>Congratulations! <br> You solved it! </h2>
-  <button class="modern-button" (click)="generateSudoku()">Challenge Another Sudoku</button>
+  <button class="modern-button" (click)="generateSudoku(selectedDifficulty)">Challenge Another Sudoku</button>
 </div>
 
 <div>
@@ -8,8 +8,17 @@
     <h1 *ngIf="isZenMode" class="heading">Sudoku</h1>
     <h1 *ngIf="!isZenMode" class="heading">Time: {{timeUsed | timer}} | Errors: {{errorCount}}</h1>
   </div>
-  <div class="sudoku-container" #sudokuContainer>
+  <div class="sudoku-container">
     <div>
+      <div class="difficulty-section">
+        <button
+          *ngFor="let difficulty of [Difficulty.Easy, Difficulty.Medium, Difficulty.Hard]"
+          class="difficulty-button" [ngClass]="{enabled: difficulty === selectedDifficulty}"
+          (click)="selectDifficulty(difficulty)">
+          {{difficulty}}
+        </button>
+      </div>
+
       <!--    Sudoku-->
       <svg viewBox="-1 -1 92 92" class="sudoku-svg">
 
@@ -92,7 +101,7 @@
     </div>
 
     <div class="button-section mobile-hidden">
-      <button class="modern-button" (click)="generateSudoku()">Generate Sudoku</button>
+      <button class="modern-button" (click)="generateSudoku()">New Sudoku</button>
     </div>
 
     <!--    Tools Section-->
@@ -153,7 +162,7 @@
 
       <div *ngFor="let distance of [1, 2, 3, 4, 5, 6, 7, 8]" class="social-distancing"></div>
 
-        <button class="modern-button social-distancing" (click)="generateSudoku()">Generate Sudoku</button>
+      <button class="modern-button social-distancing" (click)="generateSudoku(selectedDifficulty)">New Sudoku</button>
 
     </div>
   </div>

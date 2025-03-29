@@ -37,9 +37,10 @@ export class AppComponent {
   timeUsed = 0;
   errorCount = 0;
   intervalId: any;
+  selectedDifficulty = Difficulty.Medium;
 
   constructor(private http: HttpClient, private sudokuService: SudokuService) {
-    this.generateSudoku();
+    this.generateSudoku(this.selectedDifficulty);
     // Read themes from themes.json and write into themes array using fs
     this.loadThemes().subscribe(themes => {
       this.themes = themes;
@@ -47,6 +48,11 @@ export class AppComponent {
     });
 
     this.markedCell = {x: 0, y: 0};
+  }
+
+  selectDifficulty(difficulty: Difficulty) {
+    this.selectedDifficulty = difficulty;
+    this.generateSudoku(difficulty);
   }
 
   selectTheme(theme: Theme) {
@@ -164,12 +170,12 @@ export class AppComponent {
     }
   }
 
-  generateSudoku() {
+  generateSudoku(difficulty = Difficulty.Medium) {
     this.sudoku = [];
     this.notes = [];
     this.markedCell = undefined;
 
-    this.sudoku = this.sudokuService.generateSudoku(Difficulty.Medium);
+    this.sudoku = this.sudokuService.generateSudoku(difficulty);
 
     for(let i = 0; i < 9; i++) {
       let noteRow = [];
@@ -282,4 +288,5 @@ export class AppComponent {
   }
 
   protected readonly Color = Color;
+  protected readonly Difficulty = Difficulty;
 }

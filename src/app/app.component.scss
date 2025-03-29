@@ -35,6 +35,15 @@
   width: 90%;
 }
 
+.difficulty-section {
+  display: flex;
+  flex-direction: row;
+  justify-self: center;
+  gap: 25px;
+  width: 90%;
+  margin-bottom: 5%;
+}
+
 .number-button {
   background: linear-gradient(90deg, var(--color-primary), var(--color-gray));
   border: none;
@@ -50,6 +59,27 @@
   display: flex;
   justify-content: center;
   flex-grow: 1;
+}
+
+.difficulty-button {
+  background: linear-gradient(90deg, var(--color-primary), #FFF);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
+  color: #FFF;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 2%;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.difficulty-button.enabled {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-error));
 }
 
 .tool-button {

@@ -112,7 +112,7 @@ export class SudokuService {
         board[row][col] = {type: ValueType.Empty, value: 0};
         const boardCopy = JSON.parse(JSON.stringify(board));
         if(this.countSolutions(boardCopy) !== 1) {
-          board[row][col] = {type: ValueType.User, value};
+          board[row][col] = {type: ValueType.Predefined, value};
         } else {
           attempts++;
         }
