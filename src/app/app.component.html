@@ -145,6 +145,20 @@
           stroke-width="0.5"
         ></line>
 
+        <!--  Highlighted Cell-->
+        <rect
+          *ngIf="markedCell"
+          [attr.x]="markedCell.x * 10"
+          [attr.y]="markedCell.y * 10"
+          width="10"
+          height="10"
+          fill="rgba(0, 0, 0, 0)"
+          [attr.stroke]="color(Color.Error)"
+          stroke-width="0.5"
+          style="cursor: pointer"
+          (click)="markedCell = undefined"
+        ></rect>
+
         <!--  Numbers-->
         <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
           <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
@@ -201,20 +215,6 @@
             ></rect>
           </ng-container>
         </ng-container>
-
-        <!--  Highlighted Cell-->
-        <rect
-          *ngIf="markedCell"
-          [attr.x]="markedCell.x * 10"
-          [attr.y]="markedCell.y * 10"
-          width="10"
-          height="10"
-          fill="rgba(0, 0, 0, 0)"
-          [attr.stroke]="color(Color.Error)"
-          stroke-width="0.5"
-          style="cursor: pointer"
-          (click)="markedCell = undefined"
-        ></rect>
       </svg>
 
       <div class="numbers-section">

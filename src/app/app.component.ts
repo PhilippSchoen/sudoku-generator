@@ -205,7 +205,11 @@ export class AppComponent {
 
   insertValue(input: string) {
     if (this.activeTool === ValueType.User) {
-      if (this.markedCell) {
+      if (
+        this.markedCell &&
+        this.sudoku[this.markedCell.y][this.markedCell.x]?.type !==
+          ValueType.Predefined
+      ) {
         this.sudoku[this.markedCell.y][this.markedCell.x] = {
           type: ValueType.User,
           value: +input,
@@ -245,6 +249,8 @@ export class AppComponent {
     this.markedCell = undefined;
 
     this.sudoku = this.sudokuService.generateSudoku(difficulty);
+
+    this.markedCell = { x: 0, y: 0 };
 
     for (let i = 0; i < 9; i++) {
       let noteRow = [];
