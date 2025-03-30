@@ -158,7 +158,7 @@ export class AppComponent {
 
   insertValue(input: string) {
     if(this.activeTool === ValueType.User) {
-      if(this.markedCell) {
+      if(this.markedCell && this.sudoku[this.markedCell.y][this.markedCell.x]?.type !== ValueType.Predefined) {
         this.sudoku[this.markedCell.y][this.markedCell.x] = {type: ValueType.User, value: +input};
         if(!this.isZenMode || this.sudoku.every(row => row.every(cell => cell?.type !== ValueType.Empty))) {
           this.verifySolution();
