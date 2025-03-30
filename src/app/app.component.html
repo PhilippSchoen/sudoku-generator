@@ -6,14 +6,17 @@
 <div>
   <div class="heading-container">
     <h1 *ngIf="isZenMode" class="heading">Sudoku</h1>
-    <h1 *ngIf="!isZenMode" class="heading">Time: {{timeUsed | timer}} | Errors: {{errorCount}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading desktop-hidden">Time: {{timeUsed | timer}} | Errors: {{errorCount}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading mobile-hidden timer">{{timeUsed | timer}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading small mobile-hidden timer">Errors: {{errorCount}}</h1>
   </div>
   <div class="sudoku-container">
     <div>
       <div class="difficulty-section mobile-hidden">
         <button
           *ngFor="let difficulty of [Difficulty.Easy, Difficulty.Medium, Difficulty.Hard]"
-          class="difficulty-button" [ngClass]="{enabled: difficulty === selectedDifficulty}"
+          class="difficulty-button"
+          [ngClass]="{enabled: difficulty === selectedDifficulty, easy: difficulty === Difficulty.Easy, medium: difficulty === Difficulty.Medium, hard: difficulty === Difficulty.Hard}"
           (click)="selectDifficulty(difficulty)">
           {{difficulty}}
         </button>
@@ -71,37 +74,51 @@
       <div class="numbers-section">
         <button *ngFor="let number of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="number-button" tabindex="-1" (click)="insertValue(number.toString())">{{number}}</button>
       </div>
-    </div>
 
-    <div class="flex-row mobile-hidden">
-      <button class="tool-button" [ngClass]="{selected: activeTool === type.User}" (click)="selectTool(type.User)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pen" viewBox="0 0 16 16">
-          <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-        </svg>
-      </button>
-      <button class="tool-button" [ngClass]="{selected: activeTool === type.Note}" (click)="selectTool(type.Note)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pencil-square" viewBox="0 0 16 16">
-          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-        </svg>
-      </button>
-      <button class="tool-button" [ngClass]="{selected: activeTool === type.Empty}" (click)="selectTool(type.Empty)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-eraser" viewBox="0 0 16 16">
-          <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
-        </svg>
-      </button>
-      <button class="tool-button" [ngClass]="{active: areHintsEnabled, inactive: !areHintsEnabled}" (click)="areHintsEnabled = !areHintsEnabled">
-        <svg *ngIf="areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb" viewBox="0 0 16 16">
-          <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
-        </svg>
-        <svg *ngIf="!areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb-off" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="button-section mobile-hidden">
-      <button class="modern-button" (click)="generateSudoku()">New Sudoku</button>
+      <div class="flex-row mobile-hidden">
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.User}" (click)="selectTool(type.User)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pen" viewBox="0 0 16 16">
+            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+          </svg>
+        </button>
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.Note}" (click)="selectTool(type.Note)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg>
+        </button>
+        <button class="tool-button" [ngClass]="{selected: activeTool === type.Empty}" (click)="selectTool(type.Empty)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-eraser" viewBox="0 0 16 16">
+            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
+          </svg>
+        </button>
+        <button class="tool-button" [ngClass]="{active: areHintsEnabled, inactive: !areHintsEnabled}" (click)="areHintsEnabled = !areHintsEnabled">
+          <svg *ngIf="areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb" viewBox="0 0 16 16">
+            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
+          </svg>
+          <svg *ngIf="!areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb-off" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"/>
+          </svg>
+        </button>
+        <button class="tool-button" [ngClass]="{active: isZenMode, inactive: !isZenMode}" (click)="isZenMode = !isZenMode">
+          <svg *ngIf="isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-brilliance" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7"/>
+          </svg>
+          <svg *ngIf="!isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-stopwatch" viewBox="0 0 16 16">
+            <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
+            <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
+          </svg>
+        </button>
+        <button class="tool-button" (click)="switchTheme()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-palette" viewBox="0 0 16 16">
+            <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"/>
+          </svg>
+        </button>
+      </div>
+      <div class="button-section mobile-hidden flex-row">
+        <button class="modern-button" (click)="generateSudoku(selectedDifficulty)">New Sudoku</button>
+      </div>
     </div>
 
     <!--    Tools Section-->
@@ -131,7 +148,6 @@
           </svg>
           Erase
         </button>
-        <div class="social-distancing"></div>
         <div class="social-distancing"></div>
         <button class="tool-button" [ngClass]="{active: areHintsEnabled, inactive: !areHintsEnabled}" (click)="areHintsEnabled = !areHintsEnabled">
           <svg *ngIf="areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-lightbulb" viewBox="0 0 16 16">
@@ -186,6 +202,9 @@
           </a>
         </div>
       </div>
+
+      <div class="social-distancing"></div>
+
       <button class="tool-button" (click)="switchTheme()">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-palette" viewBox="0 0 16 16">
           <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>

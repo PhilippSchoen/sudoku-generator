@@ -19,7 +19,6 @@
   flex-direction: column;
   display: flex;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), 0 0 3px #ffffff;
-  /* Adjust width as necessary */
 }
 
 .social-distancing {
@@ -45,7 +44,7 @@
 }
 
 .number-button {
-  background: linear-gradient(90deg, var(--color-primary), var(--color-gray));
+  background: var(--color-primary);
   border: none;
   border-radius: 8px;
   box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
@@ -53,7 +52,7 @@
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
-  padding: 15px 2%;
+  padding: 1.5% 2%;
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -68,9 +67,9 @@
   box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
   color: #FFF;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
-  padding: 15px 2%;
+  padding: 1.5% 2%;
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -95,6 +94,21 @@
 
 .difficulty-button.enabled {
   background: linear-gradient(90deg, var(--color-primary), var(--color-error));
+}
+
+.difficulty-button.enabled.easy {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
+  color: #FFF;
+}
+
+.difficulty-button.enabled.medium {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-black));
+  color: #FFF;
+}
+
+.difficulty-button.enabled.hard {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-error));
+  color: #FFF;
 }
 
 .dropdown {
@@ -183,11 +197,19 @@
 
 .flex-row {
   flex-direction: row;
-  gap: 30px;
+  gap: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
 .mobile-hidden {
   display: none !important;
+}
+
+.desktop-hidden {
+  display: block !important;
 }
 
 /* Media query for smaller screens */
@@ -200,10 +222,12 @@
   .tools-section {
     width: 70vw;
     margin-top: 20px;
+    padding: 10px;
   }
 
   .tool-button {
     margin-top: 0;
+    padding: 4% 6%;
   }
 
   .sudoku-svg {
@@ -215,12 +239,27 @@
     display: flex !important;
   }
 
+  .mobile-hidden.heading {
+    display: block !important;
+  }
+
   .tools-section {
     display: none;
   }
 
   .numbers-section {
     width: 100%;
+    gap: 5px;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+    color: var(--color-secondary);
+  }
+
+  .desktop-hidden {
+    display: none !important;
   }
 }
 
@@ -235,6 +274,10 @@
   margin: 30px;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.heading.timer {
+  margin: 5px;
 }
 
 .heading.small {
