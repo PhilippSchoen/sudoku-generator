@@ -191,6 +191,8 @@ export class AppComponent {
 
     this.sudoku = this.sudokuService.generateSudoku(difficulty);
 
+    this.markedCell = {x: 0, y: 0};
+
     for(let i = 0; i < 9; i++) {
       let noteRow = [];
       for(let j = 0; j < 9; j++) {
