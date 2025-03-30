@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Default",
+    "colors": {
+      "primary": "#153779",
+      "secondary": "#0DBF6F",
+      "black": "#0D0C07",
+      "gray": "#282515",
+      "error": "#92140C"
+    },
+    "pattern": null
+  },
+  {
+    "id": 2,
+    "name": "Waves",
+    "colors": {
+      "primary": "#027BCE",
+      "secondary": "#32CD32",
+      "black": "#1B1F23",
+      "gray": "#A9B4B8",
+      "error": "#FF5757"
+    },
+    "pattern": "wave-pattern"
+  },
+  {
+    "id": 3,
+    "name": "Art Deco",
+    "colors": {
+      "primary": "#004F5D",
+      "secondary": "#007C42",
+      "black": "#2B2B2B",
+      "gray": "#B0AFAF",
+      "error": "#FF4C4C"
+    },
+    "pattern": "art-deco-pattern"
+  },
+  {
+    "id": 4,
+    "name": "Cyberpunk",
+    "colors": {
+      "primary": "#6300ff",
+      "secondary": "#00ff9f",
+      "black": "#091833",
+      "gray": "#172848",
+      "error": "#ff2a6d"
+    },
+    "pattern": "hexagon-pattern"
+  }
+]
