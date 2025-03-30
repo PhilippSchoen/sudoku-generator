@@ -6,9 +6,8 @@
 <div>
   <div class="heading-container">
     <h1 *ngIf="isZenMode" class="heading">Sudoku</h1>
-    <h1 *ngIf="!isZenMode" class="heading desktop-hidden">Time: {{timeUsed | timer}} | Errors: {{errorCount}}</h1>
-    <h1 *ngIf="!isZenMode" class="heading mobile-hidden timer">{{timeUsed | timer}}</h1>
-    <h1 *ngIf="!isZenMode" class="heading small mobile-hidden timer">Errors: {{errorCount}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading timer">{{timeUsed | timer}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading small timer">Errors: {{errorCount}}</h1>
   </div>
   <div class="sudoku-container">
     <div>
