@@ -9,4 +9,5 @@ export type Theme = {
     error: string;
   };
   pattern?: string;
-}
+  previewImage?: string;
+};

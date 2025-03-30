@@ -48,7 +48,7 @@
   border: none;
   border-radius: 8px;
   box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
-  color: #FFF;
+  color: #fff;
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
@@ -61,11 +61,11 @@
 }
 
 .difficulty-button {
-  background: linear-gradient(90deg, var(--color-primary), #FFF);
+  background: linear-gradient(90deg, var(--color-primary), #fff);
   border: none;
   border-radius: 8px;
   box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
-  color: #FFF;
+  color: #fff;
   cursor: pointer;
   font-size: 15px;
   font-weight: bold;
@@ -78,18 +78,30 @@
 }
 
 .tool-button.easy {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  color: #fff;
 }
 
 .tool-button.medium {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-black));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-black)
+  );
+  color: #fff;
 }
 
 .tool-button.hard {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-error));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-error)
+  );
+  color: #fff;
 }
 
 .difficulty-button.enabled {
@@ -97,18 +109,30 @@
 }
 
 .difficulty-button.enabled.easy {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  color: #fff;
 }
 
 .difficulty-button.enabled.medium {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-black));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-black)
+  );
+  color: #fff;
 }
 
 .difficulty-button.enabled.hard {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-error));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-error)
+  );
+  color: #fff;
 }
 
 .dropdown {
@@ -122,7 +146,7 @@
 .dropdown-content {
   display: none;
   min-width: 100%;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   background: rgba(0, 0, 0, 0);
   border-radius: 8px;
@@ -130,19 +154,23 @@
 
 .dropdown-content a {
   border-radius: 8px;
-  background: linear-gradient(33deg, var(--color-primary), #FFF);
+  background: linear-gradient(33deg, var(--color-primary), #fff);
   padding: 12px 16px;
   text-decoration: none;
   font-size: 20px;
   font-weight: bold;
   display: block;
   border-bottom: 1px solid #ccc;
-  color: #FFF;
+  color: #fff;
   cursor: pointer;
 }
 
 .dropdown-content a.easy {
-  background: linear-gradient(33deg, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(
+    33deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
 }
 
 .dropdown-content a.medium {
@@ -162,7 +190,7 @@
 }
 
 .tool-button {
-  background: conic-gradient(from 145deg, var(--color-primary),#FFF);
+  background: conic-gradient(from 145deg, var(--color-primary), #fff);
   border: none;
   border-radius: 8px;
   box-shadow: 5px 5px 15px #4c5868, -5px -5px 15px #ffffff;
@@ -180,19 +208,32 @@
 }
 
 .tool-button.selected {
-  background: conic-gradient(from 145deg, var(--color-gray) ,var(--color-primary));
-  color: #FFF;
-  box-shadow: 5px 5px 15px var(--color-primary), -5px -5px 15px rgba(0, 0, 0, 0.5);
+  background: conic-gradient(
+    from 145deg,
+    var(--color-gray),
+    var(--color-primary)
+  );
+  color: #fff;
+  box-shadow: 5px 5px 15px var(--color-primary),
+    -5px -5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .tool-button.active {
-  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  color: #fff;
 }
 
 .tool-button.inactive {
-  background: conic-gradient(from 145deg, var(--color-primary),var(--color-error));
-  color: #FFF;
+  background: conic-gradient(
+    from 145deg,
+    var(--color-primary),
+    var(--color-error)
+  );
+  color: #fff;
 }
 
 .flex-row {
@@ -285,7 +326,11 @@
 }
 
 .heading:hover {
-  background: linear-gradient(to left, var(--color-primary), var(--color-black));
+  background: linear-gradient(
+    to left,
+    var(--color-primary),
+    var(--color-black)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -341,8 +386,13 @@
 }
 
 @keyframes blink-red {
-  0%, 100% { fill: var(--color-black); }
-  50% { fill: var(--color-error); }
+  0%,
+  100% {
+    fill: var(--color-black);
+  }
+  50% {
+    fill: var(--color-error);
+  }
 }
 
 .blink-animation {
@@ -350,10 +400,19 @@
 }
 
 @keyframes scale-up {
-  0%, 100% {fill: var(--color-secondary)}
-  0% {font-size: 8px}
-  50% {font-size: 10px}
-  100% {font-size: 8px}
+  0%,
+  100% {
+    fill: var(--color-secondary);
+  }
+  0% {
+    font-size: 8px;
+  }
+  50% {
+    font-size: 10px;
+  }
+  100% {
+    font-size: 8px;
+  }
 }
 
 .success-animation {

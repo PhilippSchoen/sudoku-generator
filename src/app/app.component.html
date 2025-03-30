@@ -1,222 +1,714 @@
 <div *ngIf="isSudokuSolved" class="sudoku-solved-text">
-  <h2>Congratulations! <br> You solved it! </h2>
-  <button class="modern-button" (click)="generateSudoku(selectedDifficulty)">Challenge Another Sudoku</button>
+  <h2>
+    Congratulations! <br />
+    You solved it!
+  </h2>
+  <button class="modern-button" (click)="generateSudoku(selectedDifficulty)">
+    Challenge Another Sudoku
+  </button>
 </div>
 
 <div>
   <div class="heading-container">
     <h1 *ngIf="isZenMode" class="heading">Sudoku</h1>
-    <h1 *ngIf="!isZenMode" class="heading timer">{{timeUsed | timer}}</h1>
-    <h1 *ngIf="!isZenMode" class="heading small timer">Errors: {{errorCount}}</h1>
+    <h1 *ngIf="!isZenMode" class="heading timer">{{ timeUsed | timer }}</h1>
+    <h1 *ngIf="!isZenMode" class="heading small timer">
+      Errors: {{ errorCount }}
+    </h1>
   </div>
   <div class="sudoku-container">
     <div>
       <div class="difficulty-section mobile-hidden">
         <button
-          *ngFor="let difficulty of [Difficulty.Easy, Difficulty.Medium, Difficulty.Hard]"
+          *ngFor="
+            let difficulty of [
+              Difficulty.Easy,
+              Difficulty.Medium,
+              Difficulty.Hard
+            ]
+          "
           class="difficulty-button"
-          [ngClass]="{enabled: difficulty === selectedDifficulty, easy: difficulty === Difficulty.Easy, medium: difficulty === Difficulty.Medium, hard: difficulty === Difficulty.Hard}"
-          (click)="selectDifficulty(difficulty)">
-          {{difficulty}}
+          [ngClass]="{
+            enabled: difficulty === selectedDifficulty,
+            easy: difficulty === Difficulty.Easy,
+            medium: difficulty === Difficulty.Medium,
+            hard: difficulty === Difficulty.Hard
+          }"
+          (click)="selectDifficulty(difficulty)"
+        >
+          {{ difficulty }}
         </button>
       </div>
 
       <!--    Sudoku-->
       <svg viewBox="-1 -1 92 92" class="sudoku-svg">
-
         <defs>
-          <pattern id="art-deco-pattern" width="60" height="60" patternUnits="userSpaceOnUse" fill="black">
-            <image href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 .828 17.272 13.556l-1.414-1.414L28 0h4zM.284 0l28 28-1.414 1.414L0 2.544V0h.284zM0 5.373l25.456 25.455-1.414 1.415L0 8.2V5.374zm0 5.656l22.627 22.627-1.414 1.414L0 13.86v-2.83zm0 5.656l19.8 19.8-1.415 1.413L0 19.514v-2.83zm0 5.657l16.97 16.97-1.414 1.415L0 25.172v-2.83zM0 28l14.142 14.142-1.414 1.414L0 30.828V28zm0 5.657L11.314 44.97 9.9 46.386l-9.9-9.9v-2.828zm0 5.657L8.485 47.8 7.07 49.212 0 42.143v-2.83zm0 5.657l5.657 5.657-1.414 1.415L0 47.8v-2.83zm0 5.657l2.828 2.83-1.414 1.413L0 53.456v-2.83zM54.627 60L30 35.373 5.373 60H8.2L30 38.2 51.8 60h2.827zm-5.656 0L30 41.03 11.03 60h2.828L30 43.858 46.142 60h2.83zm-5.656 0L30 46.686 16.686 60h2.83L30 49.515 40.485 60h2.83zm-5.657 0L30 52.343 22.343 60h2.83L30 55.172 34.828 60h2.83zM32 60l-2-2-2 2h4zM59.716 0l-28 28 1.414 1.414L60 2.544V0h-.284zM60 5.373L34.544 30.828l1.414 1.415L60 8.2V5.374zm0 5.656L37.373 33.656l1.414 1.414L60 13.86v-2.83zm0 5.656l-19.8 19.8 1.415 1.413L60 19.514v-2.83zm0 5.657l-16.97 16.97 1.414 1.415L60 25.172v-2.83zM60 28L45.858 42.142l1.414 1.414L60 30.828V28zm0 5.657L48.686 44.97l1.415 1.415 9.9-9.9v-2.828zm0 5.657L51.515 47.8l1.414 1.413 7.07-7.07v-2.83zm0 5.657l-5.657 5.657 1.414 1.415L60 47.8v-2.83zm0 5.657l-2.828 2.83 1.414 1.413L60 53.456v-2.83zM39.9 16.385l1.414-1.414L30 3.658 18.686 14.97l1.415 1.415 9.9-9.9 9.9 9.9zm-2.83 2.828l1.415-1.414L30 9.313 21.515 17.8l1.414 1.413 7.07-7.07 7.07 7.07zm-2.827 2.83l1.414-1.416L30 14.97l-5.657 5.657 1.414 1.415L30 17.8l4.243 4.242zm-2.83 2.827l1.415-1.414L30 20.626l-2.828 2.83 1.414 1.414L30 23.456l1.414 1.414zM56.87 59.414L58.284 58 30 29.716 1.716 58l1.414 1.414L30 32.544l26.87 26.87z' fill='%23007C42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E" width="60" height="60"/>
+          <pattern
+            id="art-deco-pattern"
+            width="60"
+            height="60"
+            patternUnits="userSpaceOnUse"
+            fill="black"
+          >
+            <image
+              href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 .828 17.272 13.556l-1.414-1.414L28 0h4zM.284 0l28 28-1.414 1.414L0 2.544V0h.284zM0 5.373l25.456 25.455-1.414 1.415L0 8.2V5.374zm0 5.656l22.627 22.627-1.414 1.414L0 13.86v-2.83zm0 5.656l19.8 19.8-1.415 1.413L0 19.514v-2.83zm0 5.657l16.97 16.97-1.414 1.415L0 25.172v-2.83zM0 28l14.142 14.142-1.414 1.414L0 30.828V28zm0 5.657L11.314 44.97 9.9 46.386l-9.9-9.9v-2.828zm0 5.657L8.485 47.8 7.07 49.212 0 42.143v-2.83zm0 5.657l5.657 5.657-1.414 1.415L0 47.8v-2.83zm0 5.657l2.828 2.83-1.414 1.413L0 53.456v-2.83zM54.627 60L30 35.373 5.373 60H8.2L30 38.2 51.8 60h2.827zm-5.656 0L30 41.03 11.03 60h2.828L30 43.858 46.142 60h2.83zm-5.656 0L30 46.686 16.686 60h2.83L30 49.515 40.485 60h2.83zm-5.657 0L30 52.343 22.343 60h2.83L30 55.172 34.828 60h2.83zM32 60l-2-2-2 2h4zM59.716 0l-28 28 1.414 1.414L60 2.544V0h-.284zM60 5.373L34.544 30.828l1.414 1.415L60 8.2V5.374zm0 5.656L37.373 33.656l1.414 1.414L60 13.86v-2.83zm0 5.656l-19.8 19.8 1.415 1.413L60 19.514v-2.83zm0 5.657l-16.97 16.97 1.414 1.415L60 25.172v-2.83zM60 28L45.858 42.142l1.414 1.414L60 30.828V28zm0 5.657L48.686 44.97l1.415 1.415 9.9-9.9v-2.828zm0 5.657L51.515 47.8l1.414 1.413 7.07-7.07v-2.83zm0 5.657l-5.657 5.657 1.414 1.415L60 47.8v-2.83zm0 5.657l-2.828 2.83 1.414 1.413L60 53.456v-2.83zM39.9 16.385l1.414-1.414L30 3.658 18.686 14.97l1.415 1.415 9.9-9.9 9.9 9.9zm-2.83 2.828l1.415-1.414L30 9.313 21.515 17.8l1.414 1.413 7.07-7.07 7.07 7.07zm-2.827 2.83l1.414-1.416L30 14.97l-5.657 5.657 1.414 1.415L30 17.8l4.243 4.242zm-2.83 2.827l1.415-1.414L30 20.626l-2.828 2.83 1.414 1.414L30 23.456l1.414 1.414zM56.87 59.414L58.284 58 30 29.716 1.716 58l1.414 1.414L30 32.544l26.87 26.87z' fill='%23007C42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E"
+              width="60"
+              height="60"
+            />
           </pattern>
-          <pattern id="wave-pattern" width="100" height="18" patternUnits="userSpaceOnUse">
-            <image href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='18' viewBox='0 0 100 18'%3E%3Cpath fill='%23027BCE' fill-opacity='0.25' d='M61.82 18c3.47-1.45 6.86-3.78 11.3-7.34C78 6.76 80.34 5.1 83.87 3.42 88.56 1.16 93.75 0 100 0v6.16C98.76 6.05 97.43 6 96 6c-9.59 0-14.23 2.23-23.13 9.34-1.28 1.03-2.39 1.9-3.4 2.66h-7.65zm-23.64 0H22.52c-1-.76-2.1-1.63-3.4-2.66C11.57 9.3 7.08 6.78 0 6.16V0c6.25 0 11.44 1.16 16.14 3.42 3.53 1.7 5.87 3.35 10.73 7.24 4.45 3.56 7.84 5.9 11.31 7.34zM61.82 0h7.66a39.57 39.57 0 0 1-7.34 4.58C57.44 6.84 52.25 8 46 8S34.56 6.84 29.86 4.58A39.57 39.57 0 0 1 22.52 0h15.66C41.65 1.44 45.21 2 50 2c4.8 0 8.35-.56 11.82-2z'%3E%3C/path%3E%3C/svg%3E" width="100" height="18" />
+          <pattern
+            id="wave-pattern"
+            width="100"
+            height="18"
+            patternUnits="userSpaceOnUse"
+          >
+            <image
+              href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='18' viewBox='0 0 100 18'%3E%3Cpath fill='%23027BCE' fill-opacity='0.25' d='M61.82 18c3.47-1.45 6.86-3.78 11.3-7.34C78 6.76 80.34 5.1 83.87 3.42 88.56 1.16 93.75 0 100 0v6.16C98.76 6.05 97.43 6 96 6c-9.59 0-14.23 2.23-23.13 9.34-1.28 1.03-2.39 1.9-3.4 2.66h-7.65zm-23.64 0H22.52c-1-.76-2.1-1.63-3.4-2.66C11.57 9.3 7.08 6.78 0 6.16V0c6.25 0 11.44 1.16 16.14 3.42 3.53 1.7 5.87 3.35 10.73 7.24 4.45 3.56 7.84 5.9 11.31 7.34zM61.82 0h7.66a39.57 39.57 0 0 1-7.34 4.58C57.44 6.84 52.25 8 46 8S34.56 6.84 29.86 4.58A39.57 39.57 0 0 1 22.52 0h15.66C41.65 1.44 45.21 2 50 2c4.8 0 8.35-.56 11.82-2z'%3E%3C/path%3E%3C/svg%3E"
+              width="100"
+              height="18"
+            />
           </pattern>
-          <pattern id="hexagon-pattern" width="28" height="49" patternUnits="userSpaceOnUse">
-            <image href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23001eff' fill-opacity='0.2' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E" width="28" height="49" />
+          <pattern
+            id="hexagon-pattern"
+            width="28"
+            height="49"
+            patternUnits="userSpaceOnUse"
+          >
+            <image
+              href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23001eff' fill-opacity='0.2' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
+              width="28"
+              height="49"
+            />
           </pattern>
         </defs>
 
         <!--  Background-->
-        <rect x="0" y="0" width="90" height="90" [attr.fill]="'url(#' + activeTheme?.pattern + ')'"></rect>
+        <rect
+          x="0"
+          y="0"
+          width="90"
+          height="90"
+          [attr.fill]="'url(#' + activeTheme?.pattern + ')'"
+        ></rect>
 
         <!--  Sub Grid-->
         <ng-container *ngFor="let position of [10, 20, 30, 40, 50, 60, 70, 80]">
-          <line x1="0" x2="90 " [attr.y1]="position" [attr.y2]="position" [attr.stroke]="color(Color.Gray)" stroke-width="0.25"></line>
-          <line [attr.x1]="position" [attr.x2]="position" y1="0" y2="90 " [attr.stroke]="color(Color.Gray)" stroke-width="0.25"></line>
+          <line
+            x1="0"
+            x2="90 "
+            [attr.y1]="position"
+            [attr.y2]="position"
+            [attr.stroke]="color(Color.Gray)"
+            stroke-width="0.25"
+          ></line>
+          <line
+            [attr.x1]="position"
+            [attr.x2]="position"
+            y1="0"
+            y2="90 "
+            [attr.stroke]="color(Color.Gray)"
+            stroke-width="0.25"
+          ></line>
         </ng-container>
 
         <!--  Main Grid-->
-        <line x1="0" x2="90 " y1="30 " y2="30 " [attr.stroke]="color(Color.Black)" stroke-width="0.5"></line>
-        <line x1="0" x2="90 " y1="60 " y2="60 " [attr.stroke]="color(Color.Black)" stroke-width="0.5"></line>
-        <line x1="30 " x2="30 " y1="0" y2="90 " [attr.stroke]="color(Color.Black)" stroke-width="0.5"></line>
-        <line x1="60 " x2="60 " y1="0" y2="90 " [attr.stroke]="color(Color.Black)" stroke-width="0.5"></line>
+        <line
+          x1="0"
+          x2="90 "
+          y1="30 "
+          y2="30 "
+          [attr.stroke]="color(Color.Black)"
+          stroke-width="0.5"
+        ></line>
+        <line
+          x1="0"
+          x2="90 "
+          y1="60 "
+          y2="60 "
+          [attr.stroke]="color(Color.Black)"
+          stroke-width="0.5"
+        ></line>
+        <line
+          x1="30 "
+          x2="30 "
+          y1="0"
+          y2="90 "
+          [attr.stroke]="color(Color.Black)"
+          stroke-width="0.5"
+        ></line>
+        <line
+          x1="60 "
+          x2="60 "
+          y1="0"
+          y2="90 "
+          [attr.stroke]="color(Color.Black)"
+          stroke-width="0.5"
+        ></line>
 
         <!--  Numbers-->
         <ng-container *ngFor="let y of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
           <ng-container *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-            <text [ngClass]="{'blink-animation': incorrectSolution, 'success-animation': areCoordinatesEqual(animatedTileIndex, [y, x]), 'success': isCoordinateAtOrBefore(animatedTileIndex, [y, x])}"
-                  *ngIf="sudoku[y][x] && sudoku[y][x].type !== type.Empty" [attr.x]="x * 10 + 3" [attr.y]="y * 10 + 8" font-size="8" font-family="Arial"
-                  [attr.fill]="sudoku[y][x].type === type.User ? color(Color.Black) : color(Color.Primary)"
-                  [attr.transform]="'rotate(' + currentRotation + ', ' + x * 10  + ', ' + y * 10 + ')'"
+            <text
+              [ngClass]="{
+                'blink-animation': incorrectSolution,
+                'success-animation': areCoordinatesEqual(animatedTileIndex, [
+                  y,
+                  x
+                ]),
+                success: isCoordinateAtOrBefore(animatedTileIndex, [y, x])
+              }"
+              *ngIf="sudoku[y][x] && sudoku[y][x].type !== type.Empty"
+              [attr.x]="x * 10 + 3"
+              [attr.y]="y * 10 + 8"
+              font-size="8"
+              font-family="Arial"
+              [attr.fill]="
+                sudoku[y][x].type === type.User
+                  ? color(Color.Black)
+                  : color(Color.Primary)
+              "
+              [attr.transform]="
+                'rotate(' +
+                currentRotation +
+                ', ' +
+                x * 10 +
+                ', ' +
+                y * 10 +
+                ')'
+              "
             >
-              {{sudoku[y][x].value}}
+              {{ sudoku[y][x].value }}
             </text>
-            <text [attr.x]="x * 10" [attr.y]="y * 10 + 2.5" font-size="2.2" fill="#777">{{notes[y][x]}}</text>
-            <rect [attr.x]="10 * x" [attr.y]="10 * y" width="10" height="10" fill-opacity="0.25" [attr.fill]="isHighlighted(x, y) ? color(Color.Primary) : 'rgba(0, 0, 0, 0)'" style="cursor: pointer" (click)="markCell(x, y)"></rect>
+            <text
+              [attr.x]="x * 10"
+              [attr.y]="y * 10 + 2.5"
+              font-size="2.2"
+              fill="#777"
+            >
+              {{ notes[y][x] }}
+            </text>
+            <rect
+              [attr.x]="10 * x"
+              [attr.y]="10 * y"
+              width="10"
+              height="10"
+              fill-opacity="0.25"
+              [attr.fill]="
+                isHighlighted(x, y) ? color(Color.Primary) : 'rgba(0, 0, 0, 0)'
+              "
+              style="cursor: pointer"
+              (click)="markCell(x, y)"
+            ></rect>
           </ng-container>
         </ng-container>
 
         <!--  Highlighted Cell-->
-        <rect *ngIf="markedCell" [attr.x]="markedCell.x * 10" [attr.y]="markedCell.y * 10" width="10" height="10" fill="rgba(0, 0, 0, 0)" [attr.stroke]="color(Color.Error)" stroke-width="0.5" style="cursor: pointer" (click)="markedCell = undefined"></rect>
+        <rect
+          *ngIf="markedCell"
+          [attr.x]="markedCell.x * 10"
+          [attr.y]="markedCell.y * 10"
+          width="10"
+          height="10"
+          fill="rgba(0, 0, 0, 0)"
+          [attr.stroke]="color(Color.Error)"
+          stroke-width="0.5"
+          style="cursor: pointer"
+          (click)="markedCell = undefined"
+        ></rect>
       </svg>
 
       <div class="numbers-section">
-        <button *ngFor="let number of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="number-button" tabindex="-1" (click)="insertValue(number.toString())">{{number}}</button>
+        <button
+          *ngFor="let number of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+          class="number-button"
+          tabindex="-1"
+          (click)="insertValue(number.toString())"
+        >
+          {{ number }}
+        </button>
       </div>
 
       <div class="flex-row mobile-hidden">
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.User}" (click)="selectTool(type.User)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pen" viewBox="0 0 16 16">
-            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+        <button
+          class="tool-button"
+          [ngClass]="{ selected: activeTool === type.User }"
+          (click)="selectTool(type.User)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            stroke="white"
+            stroke-width="0.75"
+            class="bi bi-pen"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
+            />
           </svg>
         </button>
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.Note}" (click)="selectTool(type.Note)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+        <button
+          class="tool-button"
+          [ngClass]="{ selected: activeTool === type.Note }"
+          (click)="selectTool(type.Note)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            stroke="white"
+            stroke-width="0.75"
+            class="bi bi-pencil-square"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+            />
           </svg>
         </button>
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.Empty}" (click)="selectTool(type.Empty)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" stroke="white" stroke-width="0.75" class="bi bi-eraser" viewBox="0 0 16 16">
-            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
+        <button
+          class="tool-button"
+          [ngClass]="{ selected: activeTool === type.Empty }"
+          (click)="selectTool(type.Empty)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            stroke="white"
+            stroke-width="0.75"
+            class="bi bi-eraser"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"
+            />
           </svg>
         </button>
-        <button class="tool-button" [ngClass]="{active: areHintsEnabled, inactive: !areHintsEnabled}" (click)="areHintsEnabled = !areHintsEnabled">
-          <svg *ngIf="areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb" viewBox="0 0 16 16">
-            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
+        <button
+          class="tool-button"
+          [ngClass]="{ active: areHintsEnabled, inactive: !areHintsEnabled }"
+          (click)="areHintsEnabled = !areHintsEnabled"
+        >
+          <svg
+            *ngIf="areHintsEnabled"
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="#FFF"
+            class="bi bi-lightbulb"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"
+            />
           </svg>
-          <svg *ngIf="!areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-lightbulb-off" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"/>
+          <svg
+            *ngIf="!areHintsEnabled"
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="#FFF"
+            class="bi bi-lightbulb-off"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"
+            />
           </svg>
         </button>
-        <button class="tool-button" [ngClass]="{active: isZenMode, inactive: !isZenMode}" (click)="isZenMode = !isZenMode">
-          <svg *ngIf="isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-brilliance" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7"/>
+        <button
+          class="tool-button"
+          [ngClass]="{ active: isZenMode, inactive: !isZenMode }"
+          (click)="isZenMode = !isZenMode"
+        >
+          <svg
+            *ngIf="isZenMode"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-brilliance"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7"
+            />
           </svg>
-          <svg *ngIf="!isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-stopwatch" viewBox="0 0 16 16">
-            <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
-            <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
+          <svg
+            *ngIf="!isZenMode"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-stopwatch"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"
+            />
+            <path
+              d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"
+            />
           </svg>
         </button>
-        <button class="tool-button" (click)="switchTheme()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-palette" viewBox="0 0 16 16">
-            <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-            <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"/>
+        <button class="tool-button" (click)="showDialog()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-palette"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"
+            />
+            <path
+              d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"
+            />
           </svg>
         </button>
       </div>
       <div class="button-section mobile-hidden flex-row">
-        <button class="modern-button" (click)="generateSudoku(selectedDifficulty)">New Sudoku</button>
+        <button
+          class="modern-button"
+          (click)="generateSudoku(selectedDifficulty)"
+        >
+          New Sudoku
+        </button>
       </div>
     </div>
 
     <!--    Tools Section-->
     <div class="tools-section">
-        <div class="heading-container">
-          <h3 class="heading small">Tools</h3>
-        </div>
+      <div class="heading-container">
+        <h3 class="heading small">Tools</h3>
+      </div>
 
       <div class="social-distancing"></div>
 
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.User}" (click)="selectTool(type.User)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-pen" viewBox="0 0 16 16">
-          <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+      <button
+        class="tool-button"
+        [ngClass]="{ selected: activeTool === type.User }"
+        (click)="selectTool(type.User)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-pen"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
+          />
         </svg>
-          Write
-        </button>
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.Note}" (click)="selectTool(type.Note)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-          </svg>
-          Note
-        </button>
-        <button class="tool-button" [ngClass]="{selected: activeTool === type.Empty}" (click)="selectTool(type.Empty)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-eraser" viewBox="0 0 16 16">
-            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
-          </svg>
-          Erase
-        </button>
-        <div class="social-distancing"></div>
-        <button class="tool-button" [ngClass]="{active: areHintsEnabled, inactive: !areHintsEnabled}" (click)="areHintsEnabled = !areHintsEnabled">
-          <svg *ngIf="areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-lightbulb" viewBox="0 0 16 16">
-            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
-          </svg>
-          <svg *ngIf="!areHintsEnabled" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-lightbulb-off" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"/>
-          </svg>
-          Hints
-        </button>
-      <button class="tool-button" [ngClass]="{active: isZenMode, inactive: !isZenMode}" (click)="isZenMode = !isZenMode">
-        <svg *ngIf="isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-brilliance" viewBox="0 0 16 16">
-          <path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7"/>
+        Write
+      </button>
+      <button
+        class="tool-button"
+        [ngClass]="{ selected: activeTool === type.Note }"
+        (click)="selectTool(type.Note)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-pencil-square"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+          />
         </svg>
-        <svg *ngIf="!isZenMode" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-stopwatch" viewBox="0 0 16 16">
-          <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
-          <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
+        Note
+      </button>
+      <button
+        class="tool-button"
+        [ngClass]="{ selected: activeTool === type.Empty }"
+        (click)="selectTool(type.Empty)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-eraser"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"
+          />
         </svg>
-        {{isZenMode ? 'Zen' : 'Time'}}
+        Erase
+      </button>
+      <div class="social-distancing"></div>
+      <button
+        class="tool-button"
+        [ngClass]="{ active: areHintsEnabled, inactive: !areHintsEnabled }"
+        (click)="areHintsEnabled = !areHintsEnabled"
+      >
+        <svg
+          *ngIf="areHintsEnabled"
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-lightbulb"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"
+          />
+        </svg>
+        <svg
+          *ngIf="!areHintsEnabled"
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-lightbulb-off"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M2.23 4.35A6 6 0 0 0 2 6c0 1.691.7 3.22 1.826 4.31.203.196.359.4.453.619l.762 1.769A.5.5 0 0 0 5.5 13a.5.5 0 0 0 0 1 .5.5 0 0 0 0 1l.224.447a1 1 0 0 0 .894.553h2.764a1 1 0 0 0 .894-.553L10.5 15a.5.5 0 0 0 0-1 .5.5 0 0 0 0-1 .5.5 0 0 0 .288-.091L9.878 12H5.83l-.632-1.467a3 3 0 0 0-.676-.941 4.98 4.98 0 0 1-1.455-4.405zm1.588-2.653.708.707a5 5 0 0 1 7.07 7.07l.707.707a6 6 0 0 0-8.484-8.484zm-2.172-.051a.5.5 0 0 1 .708 0l12 12a.5.5 0 0 1-.708.708l-12-12a.5.5 0 0 1 0-.708"
+          />
+        </svg>
+        Hints
+      </button>
+      <button
+        class="tool-button"
+        [ngClass]="{ active: isZenMode, inactive: !isZenMode }"
+        (click)="isZenMode = !isZenMode"
+      >
+        <svg
+          *ngIf="isZenMode"
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-brilliance"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7"
+          />
+        </svg>
+        <svg
+          *ngIf="!isZenMode"
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-stopwatch"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"
+          />
+          <path
+            d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"
+          />
+        </svg>
+        {{ isZenMode ? "Zen" : "Time" }}
       </button>
       <div class="dropdown">
-        <button class="tool-button" (click)="selectDifficulty()" [ngClass]="{easy: selectedDifficulty === Difficulty.Easy, medium: selectedDifficulty === Difficulty.Medium, hard: selectedDifficulty === Difficulty.Hard}">
-          <svg *ngIf="selectedDifficulty === Difficulty.Easy" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
-            <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+        <button
+          class="tool-button"
+          (click)="selectDifficulty()"
+          [ngClass]="{
+            easy: selectedDifficulty === Difficulty.Easy,
+            medium: selectedDifficulty === Difficulty.Medium,
+            hard: selectedDifficulty === Difficulty.Hard
+          }"
+        >
+          <svg
+            *ngIf="selectedDifficulty === Difficulty.Easy"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-brightness-high-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"
+            />
           </svg>
-          <svg *ngIf="selectedDifficulty === Difficulty.Medium" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
-            <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+          <svg
+            *ngIf="selectedDifficulty === Difficulty.Medium"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-lightning-charge-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"
+            />
           </svg>
-          <svg *ngIf="selectedDifficulty === Difficulty.Hard" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          <svg
+            *ngIf="selectedDifficulty === Difficulty.Hard"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FFF"
+            class="bi bi-exclamation-triangle-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+            />
           </svg>
-          {{selectedDifficulty}}
+          {{ selectedDifficulty }}
         </button>
         <div class="dropdown-content">
           <a class="easy" (click)="selectDifficulty(Difficulty.Easy)">
-            <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
-              <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="#FFF"
+              class="bi bi-brightness-high-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"
+              />
             </svg>
-            {{Difficulty.Easy}}
+            {{ Difficulty.Easy }}
           </a>
           <a class="medium" (click)="selectDifficulty(Difficulty.Medium)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
-              <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="#FFF"
+              class="bi bi-lightning-charge-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"
+              />
             </svg>
-            {{Difficulty.Medium}}
+            {{ Difficulty.Medium }}
           </a>
           <a class="hard" (click)="selectDifficulty(Difficulty.Hard)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-          </svg>
-            {{Difficulty.Hard}}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="#FFF"
+              class="bi bi-exclamation-triangle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+              />
+            </svg>
+            {{ Difficulty.Hard }}
           </a>
         </div>
       </div>
 
       <div class="social-distancing"></div>
 
-      <button class="tool-button" (click)="switchTheme()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#FFF" class="bi bi-palette" viewBox="0 0 16 16">
-          <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-          <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"/>
+      <button class="tool-button" (click)="showDialog()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="#FFF"
+          class="bi bi-palette"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"
+          />
+          <path
+            d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7"
+          />
         </svg>
         Theme
       </button>
 
-      <div *ngFor="let distance of [1, 2, 3, 4, 5, 6, 7, 8]" class="social-distancing"></div>
+      <div
+        *ngFor="let distance of [1, 2, 3, 4, 5, 6, 7, 8]"
+        class="social-distancing"
+      ></div>
 
-      <button class="modern-button social-distancing" (click)="generateSudoku(selectedDifficulty)">New Sudoku</button>
-
+      <button
+        class="modern-button social-distancing"
+        (click)="generateSudoku(selectedDifficulty)"
+      >
+        New Sudoku
+      </button>
     </div>
   </div>
-
 </div>
+
+<p-dialog
+  header="Edit Theme"
+  [modal]="true"
+  [(visible)]="visible"
+  (onHide)="visible = false"
+  [style.width]="'20vw'"
+>
+  <p-carousel
+    [value]="themes"
+    [circular]="false"
+    [numVisible]="
+      currentWidth < 650
+        ? 1
+        : currentWidth < 1000
+        ? 2
+        : currentWidth < 1600
+        ? 3
+        : 4
+    "
+    [orientation]="currentWidth < 650 ? 'vertical' : 'horizontal'"
+  >
+    <ng-template let-theme #item>
+      <button
+        class="border border-surface rounded-border m-2 p-4"
+        [ngClass]="{
+          '!border-[var(--color-primary)] border-2': selectedTheme === theme
+        }"
+        (click)="selectedTheme = theme"
+      >
+        <div class="mb-4 font-medium text-center">{{ theme.name }}</div>
+        <div class="mb-4">
+          <div class="relative mx-auto">
+            <img
+              [src]="theme.previewImage"
+              [alt]="theme.name"
+              class="w-full h-full max-h-36 lg:max-h-96 rounded-border object-fit-cover"
+            />
+          </div>
+        </div>
+      </button>
+    </ng-template>
+  </p-carousel>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+    <p-button
+      label="Save"
+      (click)="selectTheme(selectedTheme); visible = false"
+    />
+  </div>
+</p-dialog>
