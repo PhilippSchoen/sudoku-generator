@@ -41,7 +41,6 @@ export class AppComponent {
 
   constructor(private http: HttpClient, private sudokuService: SudokuService) {
     this.generateSudoku(this.selectedDifficulty);
-    // Read themes from themes.json and write into themes array using fs
     this.loadThemes().subscribe(themes => {
       this.themes = themes;
       this.selectTheme(themes[0]);
@@ -50,9 +49,24 @@ export class AppComponent {
     this.markedCell = {x: 0, y: 0};
   }
 
-  selectDifficulty(difficulty: Difficulty) {
-    this.selectedDifficulty = difficulty;
-    this.generateSudoku(difficulty);
+  selectDifficulty(difficulty?: Difficulty) {
+    if(difficulty) {
+      this.selectedDifficulty = difficulty;
+    } else {
+      switch(this.selectedDifficulty) {
+        case Difficulty.Easy:
+          this.selectedDifficulty = Difficulty.Medium;
+          break;
+        case Difficulty.Medium:
+          this.selectedDifficulty = Difficulty.Hard;
+          break;
+        case Difficulty.Hard:
+          this.selectedDifficulty = Difficulty.Easy;
+          break;
+      }
+    }
+    this.generateSudoku(this.selectedDifficulty);
+
   }
 
   selectTheme(theme: Theme) {

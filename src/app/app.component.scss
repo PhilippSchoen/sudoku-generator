@@ -78,8 +78,73 @@
   flex-grow: 1;
 }
 
+.tool-button.easy {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-secondary));
+  color: #FFF;
+}
+
+.tool-button.medium {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-black));
+  color: #FFF;
+}
+
+.tool-button.hard {
+  background: conic-gradient(from 145deg, var(--color-primary), var(--color-error));
+  color: #FFF;
+}
+
 .difficulty-button.enabled {
   background: linear-gradient(90deg, var(--color-primary), var(--color-error));
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+}
+
+.dropdown-content {
+  display: none;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 8px;
+}
+
+.dropdown-content a {
+  border-radius: 8px;
+  background: linear-gradient(33deg, var(--color-primary), #FFF);
+  padding: 12px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+  display: block;
+  border-bottom: 1px solid #ccc;
+  color: #FFF;
+  cursor: pointer;
+}
+
+.dropdown-content a.easy {
+  background: linear-gradient(33deg, var(--color-primary), var(--color-secondary));
+}
+
+.dropdown-content a.medium {
+  background: linear-gradient(33deg, var(--color-primary), var(--color-black));
+}
+
+.dropdown-content a.hard {
+  background: linear-gradient(33deg, var(--color-primary), var(--color-error));
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 .tool-button {
