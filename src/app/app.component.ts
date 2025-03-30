@@ -147,7 +147,6 @@ export class AppComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.currentWidth = event.target.innerWidth;
-    console.log('Current width:', this.currentWidth);
   }
 
   @HostListener('document:keydown', ['$event'])
