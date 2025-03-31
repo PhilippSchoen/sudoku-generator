@@ -1,19 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
-  font-family: 'Inter';
-  src: url('/public/assets/fonts/Inter/Inter-VariableFont.ttf') format('ttf'),
-  url('/public/assets/fonts/Inter/Inter-Italic-VariableFont.ttf') format('ttf');
+  font-family: "Inter";
+  src: url("/public/assets/fonts/Inter/Inter-VariableFont.ttf") format("ttf"),
+    url("/public/assets/fonts/Inter/Inter-Italic-VariableFont.ttf")
+      format("ttf");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 :root {
-  --color-black: #0D0C07;
+  --color-black: #0d0c07;
   --color-gray: #282515;
-  --color-error: #92140C;
+  --color-error: #92140c;
   --color-primary: #153779;
-  --color-secondary: #0DBF6F;
+  --color-secondary: #0dbf6f;
+}
+
+.p-carousel-item {
+  align-content: center;
+  justify-content: center;
+  display: flex;
 }

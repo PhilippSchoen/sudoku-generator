@@ -9,7 +9,8 @@
       "gray": "#282515",
       "error": "#92140C"
     },
-    "pattern": null
+    "pattern": null,
+    "previewImage": "assets/theme-preview/default.webp"
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@
       "gray": "#A9B4B8",
       "error": "#FF5757"
     },
-    "pattern": "wave-pattern"
+    "pattern": "wave-pattern",
+    "previewImage": "assets/theme-preview/waves.webp"
   },
   {
     "id": 3,
@@ -33,7 +35,8 @@
       "gray": "#B0AFAF",
       "error": "#FF4C4C"
     },
-    "pattern": "art-deco-pattern"
+    "pattern": "art-deco-pattern",
+    "previewImage": "assets/theme-preview/art-deco.webp"
   },
   {
     "id": 4,
@@ -45,6 +48,7 @@
       "gray": "#172848",
       "error": "#ff2a6d"
     },
-    "pattern": "hexagon-pattern"
+    "pattern": "hexagon-pattern",
+    "previewImage": "assets/theme-preview/cyberpunk.webp"
   }
 ]
