@@ -9,7 +9,34 @@ export class SudokuService {
 
   cachedSolution?: SudokuValue[][];
 
-  constructor() { }
+  constructor() {
+    this.initializeArcs();
+  }
+
+  private domains: Set<number>[][] = Array.from({length: 9}, () => Array.from({length: 9}, () => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
+  private arcs: Set<string>[][] = Array.from({length: 9}, () => Array.from({length: 9}, () => new Set<string>()))
+
+  initializeArcs() {
+    for(let i = 0; i < 9; i++) {
+      for(let j = 0; j < 9; j++) {
+        for(let x = 0; x < 9; x++) {
+          if(x !== i) {
+            this.arcs[i][j].add(`${x}${j}`);
+          }
+          if(x !== j) {
+            this.arcs[i][j].add(`${i}${x}`);
+          }
+        }
+        for(let x = Math.floor(i / 3) * 3; x < Math.floor(i / 3) * 3 + 3; x++) {
+          for(let y = Math.floor(j / 3) * 3; y < Math.floor(j / 3) * 3 + 3; y++) {
+            if(x !== i && y !== j) {
+              this.arcs[i][j].add(`${x}${y}`);
+            }
+          }
+        }
+      }
+    }
+  }
 
   generateSudoku(difficulty: Difficulty): SudokuValue[][] {
     const sudoku: SudokuValue[][] = [];
@@ -57,7 +84,7 @@ export class SudokuService {
           for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
               board[i][j] = {type: ValueType.Predefined, value: num};
-              if(this.solveSudoku(board)) {
+              if(this.ac3(board) && this.solveSudoku(board)) {
                 return true;
               }
               board[i][j] = {type: ValueType.Empty, value: 0};
@@ -79,7 +106,9 @@ export class SudokuService {
           for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
               board[i][j] = {type: ValueType.User, value: num};
-              count += this.countSolutions(board);
+              if(this.ac3(board)) {
+                count += this.countSolutions(board);
+              }
               board[i][j] = {type: ValueType.Empty, value: 0};
             }
           }
@@ -88,6 +117,10 @@ export class SudokuService {
       }
     }
     return 1;
+  }
+
+  private ac3(board: SudokuValue[][]): boolean {
+    return true;
   }
 
   private removeNumbers(board: SudokuValue[][], difficulty: Difficulty) {
