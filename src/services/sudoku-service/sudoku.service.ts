@@ -38,6 +38,64 @@ export class SudokuService {
     }
   }
 
+  private ac3(board: SudokuValue[][]): boolean {
+    const queue: string[] = [];
+    for(let i = 0; i < 9; i++) {
+      for(let j = 0; j < 9; j++) {
+        queue.push(...this.arcs[i][j].values());
+      }
+    }
+    while(queue.length > 0) {
+      const [i, j] = queue.shift()!.split('').map(Number);
+      if(this.revise(board, i, j)) {
+        if(this.domains[i][j].size === 0) {
+          return false;
+        }
+        for(let x = 0; x < 9; x++) {
+          if(x !== i && this.arcs[x][j].has(`${i}${j}`)) {
+            queue.push(`${x}${j}`);
+          }
+          if(x !== j && this.arcs[i][x].has(`${i}${j}`)) {
+            queue.push(`${i}${x}`);
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  private isArcConsistent(board: SudokuValue[][], i: number, j: number, x: number, y: number): boolean {
+    for(let value of this.domains[i][j]) {
+      if(this.domains[x][y].has(value) && x !== i && y !== j) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private revise(board: SudokuValue[][], i: number, j: number): boolean {
+    let revised = false;
+    for(let value of this.domains[i][j]) {
+      let hasSupport = false;
+      for(let x = 0; x < 9; x++) {
+        for(let y = 0; y < 9; y++) {
+          if(this.domains[x][y].has(value) && this.isArcConsistent(board, i, j, x, y)) {
+            hasSupport = true;
+            break;
+          }
+        }
+        if(hasSupport) {
+          break;
+        }
+      }
+      if(!hasSupport) {
+        this.domains[i][j].delete(value);
+        revised = true;
+      }
+    }
+    return revised;
+  }
+
   generateSudoku(difficulty: Difficulty): SudokuValue[][] {
     const sudoku: SudokuValue[][] = [];
     for(let i = 0; i < 9; i++) {
@@ -84,7 +142,7 @@ export class SudokuService {
           for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
               board[i][j] = {type: ValueType.Predefined, value: num};
-              if(this.ac3(board) && this.solveSudoku(board)) {
+              if(this.solveSudoku(board)) {
                 return true;
               }
               board[i][j] = {type: ValueType.Empty, value: 0};
@@ -106,9 +164,9 @@ export class SudokuService {
           for(let num of numbers) {
             if(this.isVariableValid(board, i, j, num)) {
               board[i][j] = {type: ValueType.User, value: num};
-              if(this.ac3(board)) {
+              // if(this.ac3(board)) {
                 count += this.countSolutions(board);
-              }
+              // }
               board[i][j] = {type: ValueType.Empty, value: 0};
             }
           }
@@ -117,10 +175,6 @@ export class SudokuService {
       }
     }
     return 1;
-  }
-
-  private ac3(board: SudokuValue[][]): boolean {
-    return true;
   }
 
   private removeNumbers(board: SudokuValue[][], difficulty: Difficulty) {
