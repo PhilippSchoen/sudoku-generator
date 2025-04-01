@@ -13,25 +13,21 @@ export class SudokuService {
     this.initializeArcs();
   }
 
-  private domains: Set<number>[][] = Array.from({length: 9}, () => Array.from({length: 9}, () => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
-  private arcs: Set<string>[][] = Array.from({length: 9}, () => Array.from({length: 9}, () => new Set<string>()))
+  private domains: Set<number>[][] = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])));
+  private arcs: [number, number][][][] = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => [] as [number, number][]));
 
   initializeArcs() {
-    for(let i = 0; i < 9; i++) {
-      for(let j = 0; j < 9; j++) {
-        for(let x = 0; x < 9; x++) {
-          if(x !== i) {
-            this.arcs[i][j].add(`${x}${j}`);
-          }
-          if(x !== j) {
-            this.arcs[i][j].add(`${i}${x}`);
-          }
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        for (let x = 0; x < 9; x++) {
+          if (x !== i) this.arcs[i][j].push([x, j]);
+          if (x !== j) this.arcs[i][j].push([i, x]);
         }
-        for(let x = Math.floor(i / 3) * 3; x < Math.floor(i / 3) * 3 + 3; x++) {
-          for(let y = Math.floor(j / 3) * 3; y < Math.floor(j / 3) * 3 + 3; y++) {
-            if(x !== i && y !== j) {
-              this.arcs[i][j].add(`${x}${y}`);
-            }
+        const boxRowStart = Math.floor(i / 3) * 3;
+        const boxColStart = Math.floor(j / 3) * 3;
+        for (let x = boxRowStart; x < boxRowStart + 3; x++) {
+          for (let y = boxColStart; y < boxColStart + 3; y++) {
+            if (x !== i || y !== j) this.arcs[i][j].push([x, y]);
           }
         }
       }
@@ -39,24 +35,24 @@ export class SudokuService {
   }
 
   private ac3(board: SudokuValue[][]): boolean {
-    const queue: string[] = [];
-    for(let i = 0; i < 9; i++) {
-      for(let j = 0; j < 9; j++) {
-        queue.push(...this.arcs[i][j].values());
+    const queue: [number, number, number, number][] = [];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        for (let [x, y] of this.arcs[i][j]) {
+          queue.push([i, j, x, y]);
+        }
       }
     }
-    while(queue.length > 0) {
-      const [i, j] = queue.shift()!.split('').map(Number);
-      if(this.revise(board, i, j)) {
-        if(this.domains[i][j].size === 0) {
+
+    while (queue.length > 0) {
+      const [i, j, x, y] = queue.shift()!;
+      if (this.revise(i, j, x, y)) {
+        if (this.domains[i][j].size === 0) {
           return false;
         }
-        for(let x = 0; x < 9; x++) {
-          if(x !== i && this.arcs[x][j].has(`${i}${j}`)) {
-            queue.push(`${x}${j}`);
-          }
-          if(x !== j && this.arcs[i][x].has(`${i}${j}`)) {
-            queue.push(`${i}${x}`);
+        for (let [nx, ny] of this.arcs[i][j]) {
+          if (nx !== x || ny !== y) {
+            queue.push([nx, ny, i, j]);
           }
         }
       }
@@ -64,31 +60,17 @@ export class SudokuService {
     return true;
   }
 
-  private isArcConsistent(board: SudokuValue[][], i: number, j: number, x: number, y: number): boolean {
-    for(let value of this.domains[i][j]) {
-      if(this.domains[x][y].has(value) && x !== i && y !== j) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private revise(board: SudokuValue[][], i: number, j: number): boolean {
+  private revise(i: number, j: number, x: number, y: number): boolean {
     let revised = false;
-    for(let value of this.domains[i][j]) {
+    for (let value of new Set(this.domains[i][j])) {
       let hasSupport = false;
-      for(let x = 0; x < 9; x++) {
-        for(let y = 0; y < 9; y++) {
-          if(this.domains[x][y].has(value) && this.isArcConsistent(board, i, j, x, y)) {
-            hasSupport = true;
-            break;
-          }
-        }
-        if(hasSupport) {
+      for (let neighbor of this.domains[x][y]) {
+        if (value !== neighbor) {
+          hasSupport = true;
           break;
         }
       }
-      if(!hasSupport) {
+      if (!hasSupport) {
         this.domains[i][j].delete(value);
         revised = true;
       }
@@ -157,23 +139,30 @@ export class SudokuService {
 
   private countSolutions(board: SudokuValue[][]): number {
     let count = 0;
-    for(let i = 0; i < 9; i++) {
-      for(let j = 0; j < 9; j++) {
-        if(board[i][j].type === ValueType.Empty) {
+
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (board[i][j].type === ValueType.Empty) {
           const numbers = this.shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-          for(let num of numbers) {
-            if(this.isVariableValid(board, i, j, num)) {
-              board[i][j] = {type: ValueType.User, value: num};
-              // if(this.ac3(board)) {
+          for (let num of numbers) {
+            if (this.isVariableValid(board, i, j, num)) {
+              board[i][j] = { type: ValueType.User, value: num };
+
+              // Apply AC-3 to further prune domains after placing a number
+              // if (this.ac3(board)) {
                 count += this.countSolutions(board);
               // }
-              board[i][j] = {type: ValueType.Empty, value: 0};
+
+              // Backtrack by resetting the cell
+              board[i][j] = { type: ValueType.Empty, value: 0 };
             }
           }
           return count;
         }
       }
     }
+
+    // If no empty cells are left, this is a valid solution
     return 1;
   }
 
