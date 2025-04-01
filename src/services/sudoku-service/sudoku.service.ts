@@ -34,6 +34,10 @@ export class SudokuService {
     }
   }
 
+  /** Note: Backtracking for 9x9 sudoku is already too fast to make use of AC-3 feasible
+   * Could be integrated for larger sudoku later on <br>
+   * Backtracking runtime: ~1ms <br>
+   * AC-3 runtime: ~1/4ms */
   private ac3(board: SudokuValue[][]): boolean {
     const queue: [number, number, number, number][] = [];
     for (let i = 0; i < 9; i++) {
@@ -86,6 +90,7 @@ export class SudokuService {
         sudoku[i].push({type: ValueType.Empty, value: 0});
       }
     }
+
     this.solveSudoku(sudoku);
     this.cachedSolution = JSON.parse(JSON.stringify(sudoku));
 
