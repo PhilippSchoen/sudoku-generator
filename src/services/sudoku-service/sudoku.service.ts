@@ -148,12 +148,8 @@ export class SudokuService {
             if (this.isVariableValid(board, i, j, num)) {
               board[i][j] = { type: ValueType.User, value: num };
 
-              // Apply AC-3 to further prune domains after placing a number
-              // if (this.ac3(board)) {
-                count += this.countSolutions(board);
-              // }
+              count += this.countSolutions(board);
 
-              // Backtrack by resetting the cell
               board[i][j] = { type: ValueType.Empty, value: 0 };
             }
           }
@@ -162,7 +158,6 @@ export class SudokuService {
       }
     }
 
-    // If no empty cells are left, this is a valid solution
     return 1;
   }
 

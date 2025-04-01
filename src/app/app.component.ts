@@ -32,7 +32,7 @@ export class AppComponent {
   themes: Theme[] = [];
   private themesUrl = 'assets/themes.json';
   activeTheme?: Theme;
-  isZenMode = true;
+  isZenMode = false;
 
   timeUsed = 0;
   errorCount = 0;
