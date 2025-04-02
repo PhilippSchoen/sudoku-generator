@@ -92,6 +92,7 @@ export class SudokuService {
     }
 
     this.solveSudoku(sudoku);
+
     this.cachedSolution = JSON.parse(JSON.stringify(sudoku));
 
     this.removeNumbers(sudoku, difficulty);
@@ -121,7 +122,37 @@ export class SudokuService {
     return array;
   }
 
+  private getDomainValues(x: number, y: number, board: SudokuValue[][]): number[] {
+    const possibleValues = new Set<number>([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    for (let i = 0; i < 9; i++) {
+      possibleValues.delete(board[x][i].value);
+      possibleValues.delete(board[i][y].value);
+
+      const blockRow = 3 * Math.floor(x / 3) + Math.floor(i / 3);
+      const blockCol = 3 * Math.floor(y / 3) + (i % 3);
+      possibleValues.delete(board[blockRow][blockCol].value);
+    }
+
+    return Array.from(possibleValues);
+  }
+
+  private selectVariableMRV(board: SudokuValue[][]): [number, number] {
+    let lowestDomainSize = 10;
+    let bestCell: [number, number] = [0, 0];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (board[i][j].type === ValueType.Empty && this.getDomainValues(i, j, board).length < lowestDomainSize) {
+          lowestDomainSize = this.domains[i][j].size;
+          bestCell = [i, j];
+        }
+      }
+    }
+    return bestCell;
+  }
+
   private solveSudoku(board: SudokuValue[][]): boolean {
+
     for(let i = 0; i < 9; i++) {
       for(let j = 0; j < 9; j++) {
         if(board[i][j].type === ValueType.Empty) {
